@@ -84,6 +84,11 @@ VALIDATION-REPORT.md
 # Generated artifacts from audits
 charts/
 *.pdf
+# Exception: the versioned user manual is a shipped deliverable, keep it tracked
+# despite the *.pdf ignore above.
+!manual/
+!manual/*.pdf
+!manual/*.html
 report.html
 generated-schema.json
 rankenstein-schema-audit.md

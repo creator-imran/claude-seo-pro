@@ -42,6 +42,7 @@ OVERLAY_PROTECTED = [
     "skills/seo-setup/",
     "tools/",
     ".github/",
+    "manual/",
     # New owned files that live inside upstream-owned dirs (protect by exact path):
     "scripts/keyword_research.py",
     "skills/seo-audit/references/business-intelligence.md",
