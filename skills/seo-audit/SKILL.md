@@ -12,6 +12,30 @@ metadata:
 
 # Full Website SEO Audit
 
+## Pro Workflow (Claude SEO Pro)
+
+This distribution runs an enhanced, evidence-first audit. Execute these phases in
+order; load each reference on demand (keep this file lean):
+
+- **Phase 0 — Business Intelligence (FIRST).** Before crawling for issues, build a
+  structured understanding of the business and write `business-profile.json`
+  (model, country of origin, target markets, ICPs, seed keyword themes,
+  `is_local_business`). Runs autonomously; surface the profile at the top of the
+  report. See `references/business-intelligence.md`.
+- **Main audit — templatized + smart LLM dispatch.** Per-category checklists,
+  model tiering (cheap tier for extraction, strong tier for judgement + synthesis),
+  parallel specialists, adversarial verification of Critical/High findings.
+  See `references/audit-playbook.md`.
+- **Keyword Research (full DataForSEO suite).** Multi-locale (origin + detected target
+  markets) research with Global/Country Volume, CPC, KD, intent, SERP features, tiered
+  into opportunities. Driver: `scripts/keyword_research.py` (`--plan` first for cost).
+  See `references/keyword-research.md`.
+- **Local SEO & GBP (if `is_local_business`).** First-party GBP API (owner OAuth) as
+  primary, DataForSEO/`seo-maps` as fallback, `seo-local` for on-page signals.
+  See `references/local-gbp-audit.md`.
+
+The original upstream process below still applies as the per-dimension mechanics.
+
 ## Process
 
 1. **Pre-fetch ALL pages FIRST (main session, not subagents)**: use `~/.claude/skills/seo/scripts/fetch_page.py` (NOTE: shared scripts live in the `seo` skill directory, not this one). Save every fetched HTML to disk and pass the **file paths** to subagents. Subagents may have no network access — they must read local files, never fetch live and never guess. Log each URL's HTTP status to a `manifest.csv`. See **Evidence Integrity Protocol** below — this step is mandatory.

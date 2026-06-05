@@ -109,23 +109,70 @@ def _collect_from_env(prov: dict) -> dict | None:
         val = os.environ.get(f["env"], "").strip()
         if val:
             cfg[f["key"]] = val
-    # require all fields present to consider it configured non-interactively
-    if len(cfg) == len(prov["fields"]):
-        return cfg
+    required = [f for f in prov["fields"] if not f.get("optional")]
+    # configured if every REQUIRED field is present; optional fields may be absent
+    if all(f["key"] in cfg for f in required) and (cfg or not required):
+        return cfg or None
     return None
 
 
+def _collect_oauth(prov: dict) -> tuple[dict | None, str | None]:
+    """Guided flow for google_oauth / gbp_oauth providers.
+    Returns (cfg, action) where action in {None, 'later'}; cfg None + action None = skip."""
+    o = prov.get("oauth", {})
+    head(f"Configure: {prov['label']}")
+    say(f"  {C['dim']}{prov['why']}{C['x']}")
+    say(f"  Scopes:    {o.get('scopes','')}")
+    say(f"  Console:   {prov['signup_url']}")
+    say(f"  {C['dim']}This uses OAuth/Service-Account, not a single key. Three choices:{C['x']}")
+    ans = input("  [N]ow, attach [L]ater, or [S]kip entirely? [N/l/s]: ").strip().lower()
+    if ans in ("s", "skip"):
+        return None, None
+    if ans in ("l", "later"):
+        return None, "later"
+    cfg = {}
+    for f in prov["fields"]:
+        suffix = " (optional)" if f.get("optional") else ""
+        val = input(f"    {f['prompt']}{suffix}: ").strip()
+        if val:
+            cfg[f["key"]] = val
+    say(f"  {C['dim']}After storing, complete OAuth by running:{C['x']}")
+    say(f"    {C['h']}{o.get('auth_cmd','(see docs)')}{C['x']}")
+    return cfg, None
+
+
 def configure_provider(prov: dict, args) -> str:
-    """Returns 'configured' | 'skipped' | 'failed'."""
-    cfg = _collect_from_env(prov) if args.from_env else _collect_interactive(prov)
-    if cfg is None:
-        return "skipped"
-    if any(not v for v in cfg.values()):
-        warn("blank value provided; skipping")
-        return "skipped"
+    """Returns 'configured' | 'skipped' | 'failed' | 'pending'."""
+    kind = providers.kind(prov)
+    name = providers.config_name(prov)
+
+    if kind in ("google_oauth", "gbp_oauth"):
+        if args.from_env:
+            cfg = _collect_from_env(prov)
+            action = None
+            if cfg is None:
+                return "skipped"
+        else:
+            cfg, action = _collect_oauth(prov)
+        if action == "later":
+            # Key the pending marker to the PROVIDER id, not the (possibly shared)
+            # config file — google-oauth shares google-api.json with the API-key provider.
+            secure_store.mark_pending(prov["id"], note=f"{prov['label']} — attach later")
+            say(f"  {C['dim']}marked pending; attach later with the auth command in docs/ONBOARDING.md{C['x']}")
+            return "pending"
+        if cfg is None:
+            return "skipped"
+    else:
+        cfg = _collect_from_env(prov) if args.from_env else _collect_interactive(prov)
+        if cfg is None:
+            return "skipped"
+        required = [f for f in prov["fields"] if not f.get("optional")]
+        if any(not cfg.get(f["key"]) for f in required):
+            warn("blank required value provided; skipping")
+            return "skipped"
 
     if not args.no_validate:
-        say("  validating against live API...")
+        say("  validating...")
         res = validate.validate(prov["id"], cfg)
         if res["ok"]:
             ok(res["detail"])
@@ -137,12 +184,17 @@ def configure_provider(prov: dict, args) -> str:
                 retry = input("  Save anyway / retry / skip? [save/R/skip]: ").strip().lower()
                 if retry in ("r", "retry", ""):
                     return configure_provider(prov, args)
-                if retry not in ("save", "s-a-v-e"):
+                if retry not in ("save",):
                     return "failed"
             else:
                 return "failed"
 
-    path = secure_store.save(prov["id"], cfg)
+    # OAuth providers merge into their config file (so google_auth.py picks up props)
+    if kind in ("google_oauth", "gbp_oauth"):
+        path = secure_store.merge(name, cfg)
+    else:
+        path = secure_store.save(name, cfg)
+    secure_store.clear_pending(prov["id"])
     ok(f"stored -> {path} (owner-only)")
 
     if prov.get("mcp") and not args.no_mcp:
@@ -164,11 +216,26 @@ def print_status():
     st = secure_store.status()
     if not st:
         warn("no credentials stored yet")
+    home = os.path.expanduser("~/.config/claude-seo")
     for prov in providers.PROVIDERS:
-        s = st.get(prov["id"])
-        if s:
+        kind = providers.kind(prov)
+        # OAuth providers: report readiness by their own token, not a shared config file.
+        if kind in ("google_oauth", "gbp_oauth"):
+            token = "oauth-token.json" if kind == "google_oauth" else "gbp-token.json"
+            if os.path.exists(os.path.join(home, token)):
+                ok(f"{prov['label']}: OAuth token present")
+            elif secure_store.is_pending(providers.config_name(prov)) or st.get(prov["id"], {}).get("pending"):
+                warn(f"{prov['label']}: PENDING (attach later — run the OAuth auth step)")
+            else:
+                say(f"  {C['dim']}- {prov['label']}: not configured{C['x']}")
+            continue
+        s = st.get(providers.config_name(prov)) or st.get(prov["id"])
+        if s and s.get("pending"):
+            warn(f"{prov['label']}: PENDING (attach later) — {s.get('note','')}")
+        elif s:
             perms = "perms OK" if s["permissions_ok"] else "PERMS TOO OPEN"
-            ok(f"{prov['label']}: keys={','.join(s['keys'])} ({perms})")
+            keys = ",".join(s["keys"]) if s["keys"] else "(config)"
+            ok(f"{prov['label']}: {keys} ({perms})")
         else:
             say(f"  {C['dim']}- {prov['label']}: not configured{C['x']}")
     head("MCP servers in ~/.claude/settings.json")
@@ -220,10 +287,12 @@ def main(argv=None):
     head("Done")
     for pid, status in results.items():
         label = providers.by_id(pid)["label"]
-        mark = {"configured": ok, "skipped": say, "failed": err}.get(status, say)
         if status == "skipped":
             say(f"  {C['dim']}- {label}: skipped{C['x']}")
+        elif status == "pending":
+            warn(f"{label}: pending (attach later)")
         else:
+            mark = {"configured": ok, "failed": err}.get(status, say)
             mark(f"{label}: {status}")
 
     say(f"""

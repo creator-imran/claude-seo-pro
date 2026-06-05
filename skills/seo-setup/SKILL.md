@@ -39,31 +39,42 @@ rotating it after setup.
 4. Summarize what is ready and what is missing. Recommend next action.
 
 ### `setup` — full guided onboarding
-Walk the four providers in this order. For EACH one:
+Walk the providers in this order. For EACH one:
 
 1. **Explain what it unlocks** (see table below) so the manager can decide if they
-   need it. All four are optional; the core audit runs without any of them, just with
-   less off-site data.
+   need it. All are optional; the core audit runs without any, just with less data.
 2. **Point them to the key** — give the signup URL and what scope/format to expect.
 3. **Have them run the wizard themselves.** Tell the user to run this in their
    terminal (in Claude Code they can prefix with `!`):
    ```
    python ~/.claude/skills/seo/onboarding/setup_wizard.py
    ```
-   The wizard prompts for each key with masked input, validates it live, stores it
-   under `~/.config/claude-seo/` with owner-only permissions, and registers the MCP
-   server. To configure just one provider: add `--provider dataforseo` (or
-   `google-api`, `firecrawl`, `exa`).
-4. **After they finish**, run `--check --json` again to confirm storage + MCP, and
-   report the result.
+   Key-based providers prompt for a masked key, validate it live, store it under
+   `~/.config/claude-seo/` (owner-only), and register the MCP server. OAuth providers
+   (GSC/GA4, GBP) guide a browser auth flow and support **"attach later"**. To
+   configure just one: add `--provider <id>`.
+4. **After they finish**, run `--check --json` again to confirm storage + MCP/pending,
+   and report the result.
 5. **Remind them to restart Claude Code** so new MCP servers load.
 
 | Provider | id | Unlocks | Get a key |
 |---|---|---|---|
-| DataForSEO | `dataforseo` | Live SERP positions, backlinks/DR, business listings, AI-mention tracking (the off-site engine) | https://app.dataforseo.com/register |
-| Google APIs | `google-api` | Real Core Web Vitals field data (CrUX), PageSpeed, + GSC/GA4 at higher tiers | https://console.cloud.google.com/apis/credentials |
+| DataForSEO | `dataforseo` | Off-site engine: SERP, **keyword-research suite**, backlinks/DR, business listings, AI mentions | https://app.dataforseo.com/register |
+| Google API key | `google-api` | Real Core Web Vitals field data (CrUX) + PageSpeed | https://console.cloud.google.com/apis/credentials |
+| Google Search Console + GA4 (OAuth) | `google-oauth` | Indexation status, search performance (clicks/impr/CTR/pos), GA4 organic traffic. **Skippable / attach later.** | OAuth client_secret.json from Cloud Console |
+| Google Business Profile (OAuth) | `gbp` | First-party local insights (impressions/calls/directions, profile, reviews). **Owner access; skippable → DataForSEO fallback.** | OAuth client_secret.json + GBP API enabled |
 | Firecrawl | `firecrawl` | Full-site crawling + JS rendering for large/SPA sites | https://www.firecrawl.dev/app/api-keys |
 | Exa | `exa` | Neural web search for competitor discovery + entity research | https://dashboard.exa.ai/api-keys |
+
+**OAuth & "attach later".** `google-oauth` and `gbp` can't be a single pasted key —
+they need a `client_secret.json` and a one-time browser consent. In the wizard the
+user picks **[N]ow / attach [L]ater / [S]kip**. "Attach later" records a *pending*
+marker (shown by `--check`) and the audit degrades gracefully:
+- No GSC/GA4 → indexation/traffic sections are "Data pending"; CWV still uses CrUX.
+- No GBP → the Local/GBP phase runs the **DataForSEO (seo-maps) fallback** on public data.
+To complete OAuth later:
+`python ~/.claude/skills/seo/scripts/google_auth.py --auth --creds <client_secret.json>` (GSC/GA4)
+or `python ~/.claude/skills/seo/onboarding/gbp_auth.py --auth --creds <client_secret.json>` (GBP).
 
 ### `rotate <provider>` — replace a key
 Tell the user to run:

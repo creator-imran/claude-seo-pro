@@ -158,9 +158,45 @@ def validate_exa(cfg: dict) -> dict:
     return {"ok": False, "detail": f"unexpected response (HTTP {status})", "warn": None}
 
 
+def validate_google_oauth(cfg: dict) -> dict:
+    """OAuth can't be completed headlessly here. Validate setup readiness instead:
+    a usable client_secret.json (or an already-minted token), without doing the
+    browser dance. Honest about what's left to do."""
+    import os
+    token = os.path.expanduser("~/.config/claude-seo/oauth-token.json")
+    if os.path.exists(token):
+        return {"ok": True, "detail": "OAuth token present (GSC/GA4 ready)", "warn": None}
+    path = (cfg.get("client_secret_path") or "").strip()
+    if not path:
+        return {"ok": True, "detail": "recorded; attach later (run the OAuth auth step to finish)",
+                "warn": "No token yet. Run the auth_cmd to mint one before GSC/GA4 sections work."}
+    if not os.path.exists(os.path.expanduser(path)):
+        return {"ok": False, "detail": f"client_secret.json not found at {path}", "warn": None}
+    return {"ok": True, "detail": "client_secret found; run the auth step to mint the token",
+            "warn": "Validation here is filesystem-only (no browser OAuth in headless mode)."}
+
+
+def validate_gbp(cfg: dict) -> dict:
+    """Same model as google_oauth, for the GBP business.manage token."""
+    import os
+    token = os.path.expanduser("~/.config/claude-seo/gbp-token.json")
+    if os.path.exists(token):
+        return {"ok": True, "detail": "GBP OAuth token present (first-party insights ready)", "warn": None}
+    path = (cfg.get("client_secret_path") or "").strip()
+    if not path:
+        return {"ok": True, "detail": "recorded; attach later (or rely on DataForSEO fallback)",
+                "warn": "No GBP token. Local SEO will use the DataForSEO (seo-maps) fallback until you complete OAuth."}
+    if not os.path.exists(os.path.expanduser(path)):
+        return {"ok": False, "detail": f"client_secret.json not found at {path}", "warn": None}
+    return {"ok": True, "detail": "client_secret found; run the GBP auth step to mint the token",
+            "warn": "Owner/manager access to the business location is required for this to return data."}
+
+
 VALIDATORS = {
     "dataforseo": validate_dataforseo,
     "google-api": validate_google_api,
+    "google-oauth": validate_google_oauth,
+    "gbp": validate_gbp,
     "firecrawl": validate_firecrawl,
     "exa": validate_exa,
 }

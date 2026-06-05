@@ -52,12 +52,38 @@ A provider is only configured if **all** its env vars are present.
   `curl -s https://api.ipify.org`. Dynamic IP? Consider disabling the whitelist
   or re-adding after each network change.
 
-### Google APIs (`google-api`)
+### Google API key (`google-api`)
 - **Get it:** Cloud Console → APIs & Services → Credentials → Create API key.
 - **Enable:** "PageSpeed Insights API" and "Chrome UX Report API" on the key's
   project. Tier 0 (this key) covers PSI + CrUX + CrUX History.
-- **Higher tiers:** Search Console, Indexing API, GA4 need OAuth or a Service
-  Account — run `/seo google setup` after onboarding for that wizard.
+
+### Google Search Console + GA4 (`google-oauth`) — skippable / attach later
+- **What it unlocks:** indexation status + URL inspection, search performance
+  (clicks/impressions/CTR/position), and GA4 organic traffic.
+- **Get it:** Cloud Console → Credentials → **Create OAuth client → Desktop app** →
+  download `client_secret.json`. Grant the Google account access to the GSC property
+  and the GA4 property first.
+- **Wizard:** choose **[N]ow / attach [L]ater / [S]kip**. If you configure now, the
+  wizard records the client_secret path + optional GSC/GA4 property ids, then prints
+  the one-time auth command:
+  `python ~/.claude/skills/seo/scripts/google_auth.py --auth --creds <client_secret.json>`
+- **Attach later:** the audit still runs — CWV uses CrUX field data; indexation and
+  traffic sections show "Data pending" until you complete OAuth.
+- **Service-account alternative:** set `service_account_path` in `google-api.json` and
+  grant the service account on the GSC/GA4 property.
+
+### Google Business Profile (`gbp`) — skippable / DataForSEO fallback
+- **What it unlocks:** first-party local insights — profile completeness, real
+  impressions/calls/direction-requests/bookings, posts, Q&A, reviews.
+- **Requires:** the "Google Business Profile API" enabled on the project AND the OAuth
+  account to have owner/manager access to the business location.
+- **Get it:** OAuth `client_secret.json` (Desktop app) with the
+  `https://www.googleapis.com/auth/business.manage` scope.
+- **Wizard:** **[N]ow / attach [L]ater / [S]kip**. Complete OAuth with:
+  `python ~/.claude/skills/seo/onboarding/gbp_auth.py --auth --creds <client_secret.json>`
+- **Fallback:** if you can't grant owner access, skip it — the Local SEO / GBP audit
+  phase automatically runs the **DataForSEO (seo-maps) public-data tier** instead, and
+  labels the section accordingly.
 
 ### Firecrawl (`firecrawl`)
 - **Get it:** https://www.firecrawl.dev/app/api-keys (keys start with `fc-`).

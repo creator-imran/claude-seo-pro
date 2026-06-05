@@ -120,16 +120,42 @@ def delete(name: str) -> bool:
     return False
 
 
+def mark_pending(name: str, note: str = "") -> Path:
+    """Record that a provider was intentionally deferred ('attach later').
+
+    Stored as a marker file so `status()` can distinguish 'pending' from 'not
+    configured at all'. A later real save() overwrites the marker.
+    """
+    return save(f"{name}.pending", {"_status": "pending", "_note": note})
+
+
+def clear_pending(name: str) -> bool:
+    return delete(f"{name}.pending")
+
+
+def is_pending(name: str) -> bool:
+    return config_path(f"{name}.pending").exists() and not config_path(name).exists()
+
+
 def status() -> dict:
-    """Summarize which provider configs exist and whether perms look safe."""
+    """Summarize which provider configs exist, whether perms look safe, and
+    which providers are pending ('attach later')."""
     out = {}
     if not CONFIG_DIR.exists():
         return out
     for f in sorted(CONFIG_DIR.glob("*.json")):
+        if f.name.endswith(".pending.json"):
+            base = f.name[: -len(".pending.json")]
+            if not config_path(base).exists():
+                out[base] = {"path": str(f), "permissions_ok": permissions_ok(f),
+                             "keys": [], "pending": True,
+                             "note": load(f.name).get("_note", "")}
+            continue
         out[f.stem] = {
             "path": str(f),
             "permissions_ok": permissions_ok(f),
-            "keys": sorted(load(f.name).keys()),
+            "keys": sorted(k for k in load(f.name).keys() if not k.startswith("_")),
+            "pending": False,
         }
     return out
 

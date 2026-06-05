@@ -16,8 +16,25 @@ integrity — not in rewriting the skill library.**
 | `onboarding/configure_mcp.py` | Safe-merge MCP servers into `~/.claude/settings.json` (backup first, never clobbers existing keys). |
 | `onboarding/setup_wizard.py` | The guided CLI: collect → validate → store → wire MCP. Interactive, `--check`, `--from-env`, per-provider, `--no-mcp` modes. |
 | `skills/seo-setup/SKILL.md` | The `/seo-setup` Claude Code skill that drives onboarding conversationally and never handles raw secrets in chat. |
+| `onboarding/gbp_auth.py` | Google Business Profile (first-party) OAuth + performance metrics (`business.manage` scope), with an honest DataForSEO fallback. |
+| `skills/seo-audit/references/business-intelligence.md` | **Phase 0** — infer business model, country of origin, target markets, ICPs, seed keywords → `business-profile.json` before any audit work. |
+| `skills/seo-audit/references/audit-playbook.md` | Templatized per-category checklists + smart LLM orchestration (model tiering, parallel specialists, adversarial verification). |
+| `skills/seo-audit/references/keyword-research.md` | Full DataForSEO keyword-research suite, multi-locale, tiered into opportunities — a standard report section. |
+| `skills/seo-audit/references/local-gbp-audit.md` | Local SEO + GBP phase: first-party GBP API primary, DataForSEO/`seo-maps` fallback, `seo-local` on-page. |
+| `scripts/keyword_research.py` | DataForSEO multi-locale keyword orchestrator with `--plan` (cost preview), preflight, and honest "Data pending" on IP-block. |
 | `NOTICE` | MIT attribution to upstream + list of additions. |
 | `docs/ONBOARDING.md`, `docs/SECURITY.md`, this file | Client-facing docs. |
+
+### Onboarding now also collects (new providers)
+- `google-oauth` — Search Console + Indexing + GA4 (OAuth/service-account), **skippable / attach-later**.
+- `gbp` — Google Business Profile API (owner OAuth, `business.manage`), **skippable → DataForSEO fallback**.
+- Deferred providers store a *pending* marker (`secure_store.mark_pending`) surfaced by `--check`, so the audit degrades gracefully instead of failing.
+
+### Audit workflow is now a 4-phase Pro pipeline
+Phase 0 Business Intelligence → templatized playbook audit → full DataForSEO keyword
+research → Local/GBP (when `is_local_business`). The `seo-audit/SKILL.md` change is a
+thin anchored "Pro Workflow" section (overlay change #0); all depth lives in the owned
+reference files above.
 
 ## Changed
 

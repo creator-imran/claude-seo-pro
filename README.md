@@ -80,10 +80,22 @@ python ~/.claude/skills/seo/onboarding/setup_wizard.py --check
 
 | Provider | Unlocks | Where to get a key |
 |---|---|---|
-| **DataForSEO** | Live SERP positions, backlinks/DR, business listings, AI-mention tracking | https://app.dataforseo.com/register |
-| **Google APIs** | Real Core Web Vitals field data (CrUX), PageSpeed; GSC/GA4 at higher tiers | https://console.cloud.google.com/apis/credentials |
+| **DataForSEO** | Off-site engine + the full keyword-research suite, backlinks/DR, listings, AI mentions | https://app.dataforseo.com/register |
+| **Google API key** | Real Core Web Vitals field data (CrUX) + PageSpeed | https://console.cloud.google.com/apis/credentials |
+| **Google Search Console + GA4** (OAuth) | Indexation, search performance, GA4 organic traffic. *Skippable / attach later.* | OAuth client_secret.json |
+| **Google Business Profile** (OAuth) | First-party local insights. *Owner access; skippable → DataForSEO fallback.* | OAuth client_secret.json + GBP API |
 | **Firecrawl** | Full-site crawling + JS rendering for large/SPA sites | https://www.firecrawl.dev/app/api-keys |
 | **Exa** | Neural web search for competitor discovery + entity research | https://dashboard.exa.ai/api-keys |
+
+### The audit is a 4-phase Pro pipeline
+
+`/seo audit` runs: **Phase 0 Business Intelligence** (infer model, country of origin,
+target markets, ICPs, seed keywords → `business-profile.json`) → **templatized audit**
+(per-category checklists, model-tiered parallel specialists, adversarial verification)
+→ **full DataForSEO keyword research** (multi-locale: origin + detected markets, with
+Global/Country Volume, CPC, KD, intent, SERP features) → **Local SEO & GBP** (when the
+business is local). Details in
+[`skills/seo-audit/references/`](skills/seo-audit/references/).
 
 > **DataForSEO note:** DataForSEO accounts often enable an **IP whitelist**. A
 > valid key can still have every *data* call blocked (error `40207`) until your
