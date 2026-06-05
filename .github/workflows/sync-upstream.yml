@@ -1,0 +1,80 @@
+name: Sync upstream Claude SEO
+
+# Keeps this fork current with AgriciDaniel/claude-seo. Runs weekly (and on demand),
+# re-vendors the latest upstream release, re-applies our overlay (Evidence Integrity
+# Protocol + fetch-path fix), and opens a PR for review. Nothing merges automatically.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Upstream tag/branch to sync to (blank = latest upstream release)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve upstream tag
+        id: tag
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(curl -fsSL https://api.github.com/repos/AgriciDaniel/claude-seo/releases/latest \
+              | python -c "import sys,json;print(json.load(sys.stdin).get('tag_name',''))" || true)
+          fi
+          if [ -z "$TAG" ]; then
+            TAG=$(python -c "import json;print(json.load(open('upstream.json'))['tag'])")
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Resolved upstream tag: $TAG"
+
+      - name: Sync upstream + re-apply overlay
+        run: python tools/sync_upstream.py --tag "${{ steps.tag.outputs.tag }}"
+
+      - name: Verify overlay is fully applied
+        run: python tools/apply_overlay.py --check
+
+      - name: Open pull request if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No upstream changes. Nothing to do."
+            exit 0
+          fi
+          BR="chore/sync-upstream-${{ steps.tag.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BR"
+          git add -A
+          git commit -m "chore: sync upstream ${{ steps.tag.outputs.tag }} + re-apply overlay"
+          git push -u origin "$BR" --force-with-lease
+          if gh pr list --head "$BR" --state open | grep -q .; then
+            echo "PR already open for $BR."
+          else
+            gh pr create \
+              --title "chore: sync upstream Claude SEO ${{ steps.tag.outputs.tag }}" \
+              --body  "Automated sync via \`tools/sync_upstream.py\`.
+
+          - Re-vendored \`AgriciDaniel/claude-seo@${{ steps.tag.outputs.tag }}\`
+          - Re-applied the overlay (Evidence Integrity Protocol + fetch-path fix)
+
+          Review the diff, run the test suite, and merge if green. If the overlay step
+          flagged a FAILED change, upstream moved an anchor in \`skills/seo-audit/SKILL.md\` —
+          update \`tools/apply_overlay.py\` before merging." \
+              --label upstream-sync || true
+          fi

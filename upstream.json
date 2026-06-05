@@ -1,0 +1,6 @@
+{
+  "repo": "AgriciDaniel/claude-seo",
+  "tag": "v2.0.0",
+  "synced_utc": "2026-06-06",
+  "note": "Pinned upstream version this fork is vendored from. Bump via tools/sync_upstream.py. 'tag' may be a release tag or 'main'."
+}

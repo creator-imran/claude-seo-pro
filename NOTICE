@@ -1,0 +1,46 @@
+Claude SEO Pro
+==============
+
+Copyright (c) 2026 Imran Shaikh (github.com/creator-imran)
+
+This product is a derivative distribution built on top of the open-source
+"Claude SEO" project and is released under the same MIT License.
+
+--------------------------------------------------------------------------
+Upstream project
+--------------------------------------------------------------------------
+Claude SEO
+  Author:     Agrici Daniel
+  Repository: https://github.com/AgriciDaniel/claude-seo
+  License:    MIT
+
+The skills, agents, scripts, schema templates, and reference documentation
+in this repository originate from Claude SEO and remain under its MIT
+license. Community contributions credited in CONTRIBUTORS.md (Lutfiya
+Miller, Florian Schmitz, Dan Colta, Chris Muller, Matej Marjanovic) are
+retained with attribution.
+
+--------------------------------------------------------------------------
+What Claude SEO Pro adds on top of upstream
+--------------------------------------------------------------------------
+1. onboarding/ - a guided, secure API onboarding system (DataForSEO,
+   Google APIs, Firecrawl, Exa) with live validation, owner-only credential
+   storage under ~/.config/claude-seo/, and safe-merge MCP configuration.
+2. skills/seo-setup/ - a /seo-setup Claude Code skill that drives guided
+   installation and onboarding conversationally.
+3. skills/seo-audit/SKILL.md - the Evidence Integrity Protocol (anti-
+   fabrication rules) and a fix to the shared-script fetch path so audit
+   subagents reliably read pre-fetched evidence instead of guessing.
+4. Self-contained installers (install.ps1 / install.sh) that install from
+   this repository directly and launch onboarding.
+
+These additions are likewise MIT-licensed. See LICENSE.
+
+--------------------------------------------------------------------------
+Third-party APIs and MCP servers
+--------------------------------------------------------------------------
+This software can configure and call third-party services that require the
+user's own accounts and credentials, each under its own terms of service:
+DataForSEO, Google APIs (PageSpeed Insights, CrUX, Search Console, GA4),
+Firecrawl, and Exa. No credentials are bundled with this software. Users
+are responsible for their own API usage and costs.
