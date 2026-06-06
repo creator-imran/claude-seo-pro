@@ -71,6 +71,21 @@ Write-Host "=> Installing onboarding wizard..." -ForegroundColor Yellow
 New-Item -ItemType Directory -Force -Path "$SkillDir\onboarding" | Out-Null
 Copy-Item -Recurse -Force "$RepoRoot\onboarding\*" "$SkillDir\onboarding"
 
+# --- Knowledge layer (persistent client memory + data cache) ---
+Write-Host "=> Installing knowledge layer..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Force -Path "$SkillDir\knowledge" | Out-Null
+Copy-Item -Recurse -Force "$RepoRoot\knowledge\*" "$SkillDir\knowledge"
+
+# --- Routing layer (model-routing policy) ---
+Write-Host "=> Installing routing layer..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Force -Path "$SkillDir\routing" | Out-Null
+Copy-Item -Recurse -Force "$RepoRoot\routing\*" "$SkillDir\routing"
+
+# --- Connector (chat -> headless SEO bridge) ---
+Write-Host "=> Installing connector..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Force -Path "$SkillDir\connector" | Out-Null
+Copy-Item -Recurse -Force "$RepoRoot\connector\*" "$SkillDir\connector"
+
 # --- Extensions ---
 if (Test-Path "$RepoRoot\extensions") {
     Write-Host "=> Installing extensions..." -ForegroundColor Yellow

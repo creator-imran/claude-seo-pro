@@ -13,13 +13,21 @@
 2. **One specialist per dimension, in parallel.** Dispatch the agents below
    concurrently; each returns structured findings with `file:line` evidence and
    confidence tags. Don't run them sequentially — they're independent.
-3. **Model tiering (cost-aware).** Match model to task difficulty:
-   | Task | Suggested tier | Why |
+3. **Model tiering (cost-aware) — driven by the router (Feature 3).** Don't guess the
+   model per task; ask the routing policy and spawn the subagent on what it returns:
+   ```
+   python ~/.claude/skills/seo/routing/model_router.py route --agent <specialist>
+   ```
+   | Task | Tier → model | Why |
    |---|---|---|
-   | Mechanical extraction (titles, metas, status codes, alt text, schema presence) | Haiku | Pattern work; cheap, fast, parallel-friendly |
-   | Reasoned judgement (E-E-A-T, intent match, SXO personas, business profile) | Sonnet/Opus | Needs synthesis + nuance |
-   | Final synthesis + prioritization + report | Opus | Cross-dimension reasoning, dependency ordering |
-   Pre-fetching means even the cheap tier can't hallucinate — it's reading real files.
+   | Mechanical extraction (titles, metas, status codes, alt text, schema presence) | extraction → Haiku | Pattern work; cheap, fast, parallel-friendly |
+   | Reasoned judgement (E-E-A-T, intent match, SXO personas, business profile, learning) | reasoning → Sonnet | Needs synthesis + nuance |
+   | Adversarial verification of a Critical/High finding | verification → Sonnet | Independent skeptic |
+   | Final synthesis + prioritization + report | synthesis → Opus | Cross-dimension reasoning, dependency ordering |
+   | The orchestrator / main loop | orchestration → Opus (**fixed**) | Switching the main model invalidates the prompt cache — keep it fixed; route only sub-work |
+   Pre-fetching means even the cheap tier can't hallucinate — it's reading real files. The
+   manager can inspect/override the policy via `/seo-models` (e.g. `--force-tier opus` for a
+   flagship report).
 4. **Adversarial verification on Critical/High findings.** Before a finding ships as
    Critical or High, a second pass tries to *refute* it from the same evidence. If it
    can't be refuted, it ships; if the evidence is ambiguous, it's downgraded or marked
@@ -43,6 +51,7 @@
 | seo-backlinks | conditional | DataForSEO/Moz/Bing present | referring domains, anchors, toxicity, gap |
 | seo-ecommerce | conditional | model == ecommerce | product schema, shopping, marketplace |
 | seo-drift | conditional | baseline exists for URL | regression vs last snapshot |
+| **seo-learn** | always (write-back) | runs LAST | distills durable client facts → knowledge store (Feature 2) |
 
 ## Per-category checklist templates
 
@@ -100,3 +109,8 @@ Business Understanding (Phase 0) → Executive summary + composite score →
 Priority issues (adversarially verified) → per-category detail → **Keyword Research**
 → **Local SEO / GBP** (if applicable) → action plan (effort-tagged, dependency-ordered)
 → appendix (evidence log, what was NOT covered, corrections vs any prior report).
+
+**Final write-back (always).** After the report is assembled, dispatch the **seo-learn**
+agent to distill durable, evidence-tagged client facts into the knowledge store, supersede
+any stale beliefs, and record the audit score on the history timeline (Feature 2 — see
+`skills/seo-learn`). This is what makes the *next* audit start informed rather than cold.

@@ -192,6 +192,28 @@ def validate_gbp(cfg: dict) -> dict:
             "warn": "Owner/manager access to the business location is required for this to return data."}
 
 
+def validate_slack(cfg: dict) -> dict:
+    """Optionally confirm the bot token via Slack auth.test; always sanity-check formats."""
+    secret = (cfg.get("signing_secret") or "").strip()
+    token = (cfg.get("bot_token") or "").strip()
+    if not secret:
+        return {"ok": False, "detail": "signing_secret missing", "warn": None}
+    warn = None if token.startswith("xoxb-") else "bot token should start with 'xoxb-'"
+    if not token:
+        return {"ok": True, "detail": "signing secret stored (no bot token — delayed replies via response_url only)",
+                "warn": "Add a bot token if you want richer chat.postMessage replies."}
+    status, body = _request("https://slack.com/api/auth.test", method="POST",
+                            headers={"Authorization": f"Bearer {token}",
+                                     "Content-Type": "application/x-www-form-urlencoded"})
+    if isinstance(body, dict) and body.get("ok"):
+        return {"ok": True, "detail": f"bot token valid (team: {body.get('team', '?')})", "warn": warn}
+    if isinstance(body, dict) and body.get("error"):
+        return {"ok": False, "detail": f"bot token rejected: {body['error']}", "warn": None}
+    # network/other — store anyway; signing secret is what the webhook needs
+    return {"ok": True, "detail": "stored (could not reach Slack to verify bot token)",
+            "warn": warn or "bot token unverified (network)"}
+
+
 VALIDATORS = {
     "dataforseo": validate_dataforseo,
     "google-api": validate_google_api,
@@ -199,6 +221,7 @@ VALIDATORS = {
     "gbp": validate_gbp,
     "firecrawl": validate_firecrawl,
     "exa": validate_exa,
+    "slack": validate_slack,
 }
 
 

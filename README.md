@@ -152,6 +152,7 @@ upstream release and opens a PR. Details in
 ## Documentation
 
 - **[User Manual (PDF, v01)](manual/Claude-SEO-Pro-User-Manual-v01.pdf)** — the complete hand-holding guide to operating the system (onboarding, every command, the audit pipeline, reading reports, troubleshooting). Start here if you're the SEO manager using the tool.
+- **[System Version & Provenance](VERSION.md)** — what came from upstream `claude-seo` vs. what this distribution adds, the full feature ledger, and verification status (machine-readable: [`system-version.json`](system-version.json)).
 - [Onboarding guide](docs/ONBOARDING.md)
 - [Security model](docs/SECURITY.md)
 - [What's different from upstream](docs/WHATS-DIFFERENT.md)

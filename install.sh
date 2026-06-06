@@ -62,6 +62,18 @@ main() {
   mkdir -p "$SKILL_DIR/onboarding"
   cp -R "$REPO_ROOT/onboarding/"* "$SKILL_DIR/onboarding/"
 
+  echo "=> Installing knowledge layer..."
+  mkdir -p "$SKILL_DIR/knowledge"
+  cp -R "$REPO_ROOT/knowledge/"* "$SKILL_DIR/knowledge/"
+
+  echo "=> Installing routing layer..."
+  mkdir -p "$SKILL_DIR/routing"
+  cp -R "$REPO_ROOT/routing/"* "$SKILL_DIR/routing/"
+
+  echo "=> Installing connector..."
+  mkdir -p "$SKILL_DIR/connector"
+  cp -R "$REPO_ROOT/connector/"* "$SKILL_DIR/connector/"
+
   if [ -d "$REPO_ROOT/extensions" ]; then
     echo "=> Installing extensions..."
     for ext in "$REPO_ROOT"/extensions/*/; do

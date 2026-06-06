@@ -186,6 +186,29 @@ PROVIDERS = [
             "single 1-result query.",
         ],
     },
+    {
+        "id": "slack",
+        "label": "Slack (chat connector)",
+        "kind": "secret",
+        "deferrable": True,
+        "config_file": "slack",
+        "why": "Lets an SEO manager run audits from Slack (`/seo audit example.com`) via the connector service.",
+        "signup_url": "https://api.slack.com/apps",
+        "docs_url": "https://api.slack.com/authentication/verifying-requests-from-slack",
+        "fields": [
+            {"key": "signing_secret", "prompt": "Slack app Signing Secret", "secret": True, "env": "SLACK_SIGNING_SECRET"},
+            {"key": "bot_token", "prompt": "Slack Bot User OAuth Token (xoxb-...)", "secret": True, "env": "SLACK_BOT_TOKEN"},
+        ],
+        "mcp": None,
+        "notes": [
+            "Powers the chat connector (see docs/CONNECTOR.md). Create a Slack app, add a "
+            "`/seo` slash command pointing at your connector's /slack URL, and copy the "
+            "Signing Secret + Bot Token here.",
+            "After onboarding, edit ~/.config/claude-seo/connector.json to allow-list which "
+            "Slack users/channels may trigger runs (deny-by-default until you do).",
+            "The connector runs as a separate service; it is not required for terminal use.",
+        ],
+    },
 ]
 
 

@@ -48,7 +48,16 @@ env/
 **/google-api.json
 **/backlinks-api.json
 **/*-api.json
+**/slack.json
+**/connector.json
+**/model-policy.json
 onboarding/.env
+# Client knowledge + data cache live ONLY in ~/.config/claude-seo/clients|cache/.
+# Safety net so client data can never be committed if it surfaces in the working tree.
+clients/
+cache/
+**/facts.jsonl
+**/history.jsonl
 
 # Node (if any)
 node_modules/

@@ -39,11 +39,20 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # forward-slash; a trailing "/" means "this directory and everything under it".
 OVERLAY_PROTECTED = [
     "onboarding/",
+    "knowledge/",
+    "routing/",
+    "connector/",
     "skills/seo-setup/",
+    "skills/seo-knowledge/",
+    "skills/seo-learn/",
+    "skills/seo-models/",
+    "skills/seo-connect/",
     "tools/",
     ".github/",
     "manual/",
+    "docs/CONNECTOR.md",
     # New owned files that live inside upstream-owned dirs (protect by exact path):
+    "agents/seo-learn.md",
     "scripts/keyword_research.py",
     "skills/seo-audit/references/business-intelligence.md",
     "skills/seo-audit/references/audit-playbook.md",
@@ -63,6 +72,8 @@ OVERLAY_PROTECTED = [
     "publish-to-github.ps1",
     ".claude-plugin/plugin.json",
     "upstream.json",
+    "VERSION.md",
+    "system-version.json",
     # Upstream org-specific files we intentionally drop from this fork; protecting
     # them keeps sync from re-introducing them.
     "CODEOWNERS",

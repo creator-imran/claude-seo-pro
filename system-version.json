@@ -1,0 +1,69 @@
+{
+  "product": "claude-seo-pro",
+  "version": "1.0.0",
+  "released": false,
+  "date": "2026-06-06",
+  "maintainer": "creator-imran",
+  "license": "MIT",
+  "upstream": {
+    "repo": "AgricIDaniel/claude-seo",
+    "url": "https://github.com/AgricIDaniel/claude-seo",
+    "tag": "v2.0.0",
+    "license": "MIT",
+    "relationship": "self-contained vendored fork (content-identical except the managed overlay)",
+    "dropped_files": ["CODEOWNERS", "CITATION.cff", ".devcontainer/"]
+  },
+  "baseline_from_upstream": {
+    "sub_skills": 25,
+    "agents": 18,
+    "scripts": "Google APIs, backlinks, drift, schema, render/fetch/parse, etc.",
+    "also": ["schema/", "hooks/", "pdf/", "references/", "extensions/", "tests/", "assets/"]
+  },
+  "in_place_modifications": [
+    {
+      "file": "skills/seo-audit/SKILL.md",
+      "managed_by": "tools/apply_overlay.py",
+      "changes": ["pro-workflow", "fetch-path", "evidence-protocol", "error-rows"],
+      "status": "present"
+    }
+  ],
+  "added": [
+    {"feature": "onboarding", "status": "verified", "paths": ["onboarding/", "skills/seo-setup/"],
+     "providers": ["dataforseo", "google-api", "google-oauth", "gbp", "firecrawl", "exa", "slack"],
+     "pending": ["GSC/GA4/GBP OAuth browser flows need real credentials"]},
+    {"feature": "audit-pipeline-4-phase", "status": "verified-docs",
+     "paths": ["skills/seo-audit/references/business-intelligence.md",
+               "skills/seo-audit/references/audit-playbook.md",
+               "skills/seo-audit/references/keyword-research.md",
+               "skills/seo-audit/references/local-gbp-audit.md",
+               "scripts/keyword_research.py"],
+     "pending": ["live DataForSEO keyword fan-out (IP whitelist)"]},
+    {"feature": "F1-knowledge-store-and-cache", "status": "verified",
+     "paths": ["knowledge/store.py", "knowledge/cache.py", "knowledge/fsutil.py", "skills/seo-knowledge/"]},
+    {"feature": "F2-client-learning-agent", "status": "verified",
+     "paths": ["agents/seo-learn.md", "skills/seo-learn/", "knowledge/learn.py"]},
+    {"feature": "F3-model-routing-policy", "status": "verified",
+     "paths": ["routing/model_router.py", "skills/seo-models/"]},
+    {"feature": "F4-chat-connector", "status": "security-core-verified",
+     "paths": ["connector/", "skills/seo-connect/", "docs/CONNECTOR.md"],
+     "pending": ["live Slack app + claude -p end-to-end (operator deploy)"]},
+    {"feature": "upstream-sync", "status": "verified-local",
+     "paths": ["upstream.json", "tools/apply_overlay.py", "tools/sync_upstream.py", ".github/workflows/sync-upstream.yml"],
+     "pending": ["sync_upstream --dry-run (was network-blocked)"]},
+    {"feature": "distribution-docs-manual", "status": "verified",
+     "paths": ["README.md", "NOTICE", ".claude-plugin/plugin.json", "install.ps1", "install.sh",
+               "publish-to-github.ps1", "docs/", "manual/Claude-SEO-Pro-User-Manual-v01.pdf"]}
+  ],
+  "deferred_features": [
+    {"feature": "F5-skills-enhancer", "status": "not-built", "note": "gated suggest-only via PR; user deferred"}
+  ],
+  "verification": {
+    "stress_test": "68/68 pass",
+    "compile_all_python": "0 failures (94 files)",
+    "secret_scan": "clean",
+    "overlay_integrity": "4/4 present, idempotent",
+    "owned_components_present": "45/45",
+    "pushed_to_github": false,
+    "push_blocker": "no git/gh/token on build machine; see docs/PUBLISH.md"
+  }
+}

@@ -10,6 +10,21 @@
 > continue into the audit + keyword research without pausing. Surface the inferred
 > profile in the final report's opening section so the manager can sanity-check it.
 
+## Step 0a — Read the client knowledge store FIRST (persistent memory)
+
+Before deriving anything, check what the system already knows about this client — that
+memory survives across sessions and model switches (see the `seo-knowledge` skill):
+```
+python ~/.claude/skills/seo/knowledge/store.py recall <domain>
+```
+- **If knowledge exists:** start the business profile *from it* (don't re-derive from
+  scratch); confirm/refresh fields against the current site rather than reinventing them.
+- **If it's a first engagement:** build the profile fresh (below), then write it back.
+
+Likewise, before any expensive API pull, prefer the data cache (provenance-tracked,
+provider/op/date-keyed) so repeat audits don't re-pay for unchanged data:
+`DataCache(provider).get_or_call(op, params, fetch, ttl_seconds=...)`.
+
 ## Inputs Claude reads (evidence-first, per the Evidence Integrity Protocol)
 
 1. The pre-fetched homepage + key pages already on disk (never re-fetch / never guess).
@@ -80,6 +95,9 @@ never asserted.
 
 ## Output of Phase 0
 
+0. **Write back to the knowledge store** so the next session/model starts informed:
+   `store.py set-profile <domain> --file business-profile.json`, append notable findings
+   as evidence-tagged facts (`add-fact`), and record the audit score (`add-history`).
 1. `business-profile.json` on disk (consumed by Keyword Research + Local/GBP phases).
 2. A short "Business Understanding" block reproduced at the top of the final report:
    model, country, target markets, ICPs, and the seed themes — each tagged with
