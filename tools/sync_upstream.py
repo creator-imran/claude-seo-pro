@@ -58,6 +58,8 @@ OVERLAY_PROTECTED = [
     "skills/seo-audit/references/audit-playbook.md",
     "skills/seo-audit/references/keyword-research.md",
     "skills/seo-audit/references/local-gbp-audit.md",
+    "skills/seo-audit/references/report-template.md",
+    "skills/seo-audit/assets/",
     "docs/ONBOARDING.md",
     "docs/SECURITY.md",
     "docs/WHATS-DIFFERENT.md",
@@ -168,7 +170,7 @@ def sync(tag: str | None, dry_run: bool) -> int:
 
     if not dry_run:
         meta["tag"] = tag
-        meta["synced_utc"] = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+        meta["synced_utc"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
         with open(os.path.join(REPO_ROOT, "upstream.json"), "w", encoding="utf-8") as fh:
             json.dump(meta, fh, indent=2)
             fh.write("\n")

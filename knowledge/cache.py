@@ -34,12 +34,12 @@ except ImportError:
 
 
 def _now_ts() -> float:
-    # epoch seconds; datetime.utcnow avoids Date.now-style nondeterminism concerns here
-    return (datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds()
+    # epoch seconds, timezone-aware (utcnow() is deprecated in 3.12+)
+    return datetime.datetime.now(datetime.timezone.utc).timestamp()
 
 
 def _iso(ts: float) -> str:
-    return datetime.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class DataCache:

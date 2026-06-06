@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!-- Claude SEO Pro — client-grade audit report skeleton.
+     Extracted from the Strokes Exhibits v2+v3 gold-standard report (June 2026).
+     CONTRACT: skills/seo-audit/references/report-template.md — every section below is
+     REQUIRED (or rendered "Data pending" with cause+unlock). Replace {{PLACEHOLDERS}},
+     duplicate row/card elements as needed, delete instruction comments before PDF. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{CLIENT}} — Full SEO Audit — {{MONTH_YEAR}}</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --muted:#5a5a72; --line:#e3e3ee; --bg:#ffffff;
+    --brand:#0b3d91; --brand2:#1466d6; --accent:#c8102e;
+    --crit:#c8102e; --high:#e8650f; --med:#caa300; --low:#5a8f3c; --ok:#2e7d32; --pend:#6b6b85;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:"Segoe UI",Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);font-size:13px;line-height:1.55}
+  .page{max-width:980px;margin:0 auto;padding:34px 46px}
+  h1,h2,h3,h4{line-height:1.2;margin:0 0 .4em}
+  h1{font-size:30px;color:var(--brand)}
+  h2{font-size:21px;color:var(--brand);border-bottom:3px solid var(--brand);padding-bottom:6px;margin-top:38px}
+  h3{font-size:16px;color:var(--ink);margin-top:24px}
+  h4{font-size:13.5px;color:var(--brand2);margin-top:18px;text-transform:uppercase;letter-spacing:.04em}
+  p{margin:.4em 0}
+  a{color:var(--brand2);text-decoration:none}
+  small{color:var(--muted)}
+  code{background:#f3f4f9;border:1px solid #e3e3ee;border-radius:4px;padding:1px 5px;font-family:Consolas,"Courier New",monospace;font-size:11.5px;color:#27304a;word-break:break-word}
+  .cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;border-left:10px solid var(--brand)}
+  .cover .eyebrow{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .cover h1{font-size:46px;margin:.2em 0}
+  .cover .sub{font-size:17px;color:var(--muted);max-width:660px}
+  .cover .meta{margin-top:34px;font-size:13px;color:var(--muted)}
+  .cover .meta b{color:var(--ink)}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:20px;color:#fff;white-space:nowrap}
+  .t-crit{background:var(--crit)} .t-high{background:var(--high)} .t-med{background:var(--med)}
+  .t-low{background:var(--low)} .t-ok{background:var(--ok)} .t-pend{background:var(--pend)}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:12px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#f5f7fc;color:var(--brand);font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+  tr:nth-child(even) td{background:#fafbfe}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .scorecard{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+  .scard{border:1px solid var(--line);border-radius:9px;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;background:#fff}
+  .scard .name{font-weight:600}
+  .scard .n{font-size:24px;font-weight:800}
+  .bar{height:7px;border-radius:6px;background:#ececf4;overflow:hidden;margin-top:5px}
+  .bar > span{display:block;height:100%}
+  .bigscore{display:flex;gap:26px;align-items:center;background:linear-gradient(135deg,#0b3d91,#1466d6);color:#fff;border-radius:14px;padding:24px 30px;margin:18px 0}
+  .bigscore .ring{font-size:54px;font-weight:800;line-height:1}
+  .bigscore .lbl{font-size:13px;opacity:.9;text-transform:uppercase;letter-spacing:.08em}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+  .kpi{border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center;background:#fff}
+  .kpi .v{font-size:22px;font-weight:800;color:var(--brand)}
+  .kpi .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
+  .callout{border-left:5px solid var(--brand2);background:#f3f7fe;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .callout.warn{border-color:var(--accent);background:#fdf2f4}
+  .callout.integrity{border-color:#2e7d32;background:#f1faf2}
+  .callout.good{border-color:#2e7d32;background:#f1faf2}
+  .finding{border:1px solid var(--line);border-radius:9px;padding:13px 16px;margin:12px 0;background:#fff}
+  .finding .hd{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+  .finding .hd .ti{font-weight:700;font-size:13.5px}
+  .ev{background:#f7f8fc;border:1px dashed #cfd3e6;border-radius:6px;padding:8px 11px;margin:7px 0;font-family:Consolas,monospace;font-size:11px;color:#2a3354;white-space:pre-wrap;word-break:break-word}
+  .src{font-size:10.5px;color:var(--muted);margin-top:4px}
+  ul,ol{margin:.4em 0 .4em 1.1em;padding:0}
+  li{margin:.25em 0}
+  .footer{margin-top:46px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--muted)}
+  .pgbreak{page-break-before:always}
+  @media print{
+    .page{padding:22px 30px;max-width:100%}
+    h2{margin-top:26px}
+    .finding,.scard,.bigscore,.callout,.kpi,table{break-inside:avoid}
+    .cover{min-height:92vh}
+  }
+</style>
+</head>
+<body>
+
+<!-- §1 COVER -->
+<div class="page"><div class="cover">
+  <div class="eyebrow">Full-Site SEO Audit · Evidence-Verified</div>
+  <h1>{{CLIENT}}</h1>
+  <div class="sub">An evidence-verified SEO audit of <b>{{DOMAIN}}</b> — {{ONE_LINE_SCOPE: on-site evidence + real-user Core Web Vitals + live search-market data}}.</div>
+  <div class="meta">
+    <p><b>Prepared for:</b> {{CLIENT_LEGAL_NAME_AND_ADDRESS}}</p>
+    <p><b>Prepared by:</b> {{PREPARER}}</p>
+    <p><b>Report version:</b> {{VERSION}} &nbsp;|&nbsp; <b>Date:</b> {{DATE}}</p>
+    <p><b>Supersedes:</b> {{PRIOR_VERSION_OR_DELETE_LINE}}</p>
+  </div>
+</div></div>
+
+<!-- §2 DATA INTEGRITY & METHODOLOGY -->
+<div class="page pgbreak">
+  <h2>Data Integrity &amp; Methodology</h2>
+  <div class="callout integrity"><b>How to read this report.</b> Every finding cites its evidence — a captured file and line, or a named field in a saved API response. Sections whose data source is unavailable say <b>Data pending</b> with the exact cause; nothing is estimated.</div>
+  <h3>How the evidence was gathered</h3>
+  <ul>
+    <li><b>Site capture:</b> {{N_PAGES}} pages fetched to disk ({{ALL_200_OR_EXCEPTIONS}}), plus sitemaps and robots.txt; specialists analyzed local files only.</li>
+    <li><b>Core Web Vitals:</b> real-user CrUX field data via PageSpeed Insights (lab figures labelled as lab).</li>
+    <li><b>Search-market data:</b> live {{API_NAME}} ({{N_CALLS}} calls, ${{COST}}); raw responses saved with a per-call manifest.</li>
+    <li><b>Analysis:</b> {{N_AGENTS}} independent specialist passes, each restricted to the evidence and required to cite sources.</li>
+  </ul>
+  <h3>Sections pending data</h3>
+  <!-- one warn-callout PER pending section; delete if none -->
+  <div class="callout warn"><b>{{PENDING_SECTION}}: Data pending.</b> {{EXACT_CAUSE_WITH_ERROR_CODE}}. To populate: {{UNLOCK_STEP}}.</div>
+  <p><small>Method notes: {{LOCATION_LANG_CODES_AND_API_QUIRKS_DISCLOSED}}</small></p>
+</div>
+
+<!-- §3 EXECUTIVE SUMMARY -->
+<div class="page pgbreak">
+  <h2>Executive Summary</h2>
+  <p>{{NARRATIVE_120_WORDS: the strategic story — the pattern, the root causes, the opportunity}}</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">{{KPI1_V}}</div><div class="k">{{KPI1_LABEL}}</div></div>
+    <div class="kpi"><div class="v">{{KPI2_V}}</div><div class="k">{{KPI2_LABEL}}</div></div>
+    <div class="kpi"><div class="v">{{KPI3_V}}</div><div class="k">{{KPI3_LABEL}}</div></div>
+    <div class="kpi"><div class="v">{{KPI4_V}}</div><div class="k">{{KPI4_LABEL}}</div></div>
+  </div>
+  <div class="bigscore">
+    <div><div class="ring">{{SCORE}}<span style="font-size:22px">/100</span></div></div>
+    <div><div class="lbl">Overall SEO Health</div>
+      <p style="margin:.3em 0 0">{{SCOPE_NOTE: what the composite includes/excludes, e.g. backlinks pending}}</p></div>
+  </div>
+  <h3>Category scorecard</h3>
+  <div class="scorecard">
+    <!-- one .scard per weighted category; color/width by score: ok>=80 low>=65 med>=50 high<50; pending rows opacity:.7 with n=PENDING -->
+    <div class="scard"><div><div class="name">{{CATEGORY}} <small>({{WEIGHT}}%)</small></div><div class="bar"><span style="width:{{SCORE}}%;background:var(--{{COLOR}})"></span></div></div><div class="n" style="color:var(--{{COLOR}})">{{SCORE}}</div></div>
+    <div class="scard" style="opacity:.7"><div><div class="name">{{PENDING_CATEGORY}}</div><div class="bar"><span style="width:0%"></span></div></div><div class="n" style="color:var(--pend);font-size:14px">PENDING</div></div>
+  </div>
+  <h3>The five highest-leverage moves</h3>
+  <ol>
+    <li><b>{{MOVE}}.</b> {{ONE_LINE_DATA_BACKED_WHY}}</li>
+    <!-- ×5 -->
+  </ol>
+</div>
+
+<!-- §4 PRIORITY ISSUES -->
+<div class="page pgbreak">
+  <h2>Priority Issues (Evidence-Verified)</h2>
+  <!-- ≥5 finding cards, Critical/High first -->
+  <div class="finding">
+    <div class="hd"><span class="tag t-crit">Critical</span><span class="ti">{{FINDING_TITLE}}</span></div>
+    <p>{{EXPLANATION_2_4_SENTENCES_WITH_NUMBERS}}</p>
+    <div class="ev">{{VERBATIM_EVIDENCE: selector / file:line / config snippet}}</div>
+    <p><b>Fix:</b> {{CONCRETE_FIX}}</p>
+    <div class="src">Evidence: {{SOURCE_FILES_AND_LINES}}</div>
+  </div>
+</div>
+
+<!-- §5 WHAT'S GENUINELY STRONG -->
+<div class="page pgbreak">
+  <h2>What's Genuinely Strong</h2>
+  <div class="callout good"><ul>
+    <li><b>{{STRENGTH}}:</b> {{EVIDENCE_BACKED_DETAIL}}</li>
+    <!-- ≥4 -->
+  </ul></div>
+
+<!-- §6 ORGANIC SEARCH VISIBILITY -->
+  <h2>Organic Search Visibility <span class="tag t-ok" style="vertical-align:middle">Live data</span></h2>
+  <p>{{API_SOURCE_AND_MARKET}}. Estimated traffic value <b>{{ETV}}</b> across <b>{{N_KEYWORDS}} ranking keywords</b>.</p>
+  <h4>Position distribution</h4>
+  <table>
+    <tr><th>Position bucket</th><th class="num">Keywords</th><th>Read</th></tr>
+    <tr><td>#1</td><td class="num">{{N}}</td><td>{{INTERPRETATION}}</td></tr>
+    <tr><td>Positions 2–3</td><td class="num">{{N}}</td><td>{{INTERPRETATION}}</td></tr>
+    <tr><td>Positions 4–10 (page 1)</td><td class="num">{{N}}</td><td>{{INTERPRETATION}}</td></tr>
+    <tr><td>Positions 11–20 (page 2)</td><td class="num">{{N}}</td><td>{{INTERPRETATION}}</td></tr>
+    <tr><td>Positions 21–30 (page 3)</td><td class="num">{{N}}</td><td>{{INTERPRETATION}}</td></tr>
+  </table>
+  <h4>Top quick-wins — already ranking, not yet top-3</h4>
+  <table>
+    <tr><th>Keyword</th><th class="num">Pos</th><th class="num">Vol</th><th class="num">KD</th><th>Intent</th></tr>
+    <!-- ≥10 rows where data allows -->
+    <tr><td>{{KW}}</td><td class="num">{{POS}}</td><td class="num">{{VOL}}</td><td class="num">{{KD}}</td><td>{{INTENT}}</td></tr>
+  </table>
+  <div class="callout"><b>Strategy read:</b> {{WHAT_THE_DISTRIBUTION_MEANS_FOR_THIS_BUSINESS}} <span class="src">Source: {{FILE}}</span></div>
+</div>
+
+<!-- §7 KEYWORD RESEARCH — MULTI-MARKET -->
+<div class="page pgbreak">
+  <h2>Keyword Research — multi-market <span class="tag t-ok" style="vertical-align:middle">Live data</span></h2>
+  <p>{{SEEDS_AND_MARKETS_INTRO + MARKET_REALITY_HONESTY}}</p>
+  <h4>Seed themes by market (volume / CPC)</h4>
+  <table>
+    <tr><th>Seed keyword</th><th class="num">{{MKT1}} vol</th><th class="num">{{MKT1}} CPC</th><th class="num">{{MKT2}} vol</th><th class="num">{{MKT3}} vol</th></tr>
+    <!-- ≥8 seed rows -->
+    <tr><td>{{SEED}}</td><td class="num">{{V}}</td><td class="num">${{C}}</td><td class="num">{{V}}</td><td class="num">{{V}}</td></tr>
+  </table>
+  <h4>Competitor gap — terms {{COMPETITOR}} ranks for that {{CLIENT}} does not</h4>
+  <table>
+    <tr><th>Keyword</th><th class="num">Vol</th><th class="num">KD</th><th>Opportunity</th></tr>
+    <!-- ≥7 rows -->
+    <tr><td>{{KW}}</td><td class="num">{{VOL}}</td><td class="num">{{KD}}</td><td>{{OPPORTUNITY_TYPE}}</td></tr>
+  </table>
+  <div class="callout"><b>Gap read:</b> {{INTERPRETATION}} <span class="src">Source: {{FILE}}</span></div>
+  <h4>Opportunity tiers</h4>
+  <ul>
+    <li><b>Quick wins ({{N}}):</b> {{DEF}}</li>
+    <li><b>Page-2/3 rescue ({{N}}):</b> {{DEF}}</li>
+    <li><b>Gap captures ({{N}}):</b> {{DEF}}</li>
+    <li><b>Secondary markets:</b> {{HONEST_DEMAND_NOTE}}</li>
+  </ul>
+</div>
+
+<!-- §8 LOCAL SEO & GBP — keep when is_local_business; otherwise replace this whole
+     page block with: <p><small>Local SEO/GBP skipped by design: {{WHY_NOT_LOCAL}}.</small></p> -->
+<div class="page pgbreak">
+  <h2>Local SEO &amp; Google Business Profile <span class="tag t-ok" style="vertical-align:middle">Live data</span></h2>
+  <p>{{GBP_INTRO}}</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">{{RATING}}★</div><div class="k">Rating</div></div>
+    <div class="kpi"><div class="v">{{REVIEWS}}</div><div class="k">Reviews</div></div>
+    <div class="kpi"><div class="v">{{PHOTOS}}</div><div class="k">Photos</div></div>
+    <div class="kpi"><div class="v">{{CATEGORIES}}</div><div class="k">Categories</div></div>
+  </div>
+  <table>
+    <tr><th>GBP field</th><th>Value (live)</th><th>Assessment</th></tr>
+    <!-- ≥8 fields: name, primary category, additional categories, claimed, rating/reviews, photos, phone, address, hours, website -->
+    <tr><td>{{FIELD}}</td><td>{{LIVE_VALUE}}</td><td><span class="tag t-{{ok|med|high}}">{{ASSESSMENT}}</span></td></tr>
+  </table>
+  <div class="callout warn"><b>Cross-source NAP:</b> {{SITE_SCHEMA_VS_GBP_VS_CITATIONS_CONSISTENCY}}</div>
+  <h4>Local action priorities</h4>
+  <ul><li>{{ACTION}}</li></ul>
+</div>
+
+<!-- §9 COMPETITIVE LANDSCAPE -->
+<div class="page pgbreak">
+  <h2>Competitive Landscape <span class="tag t-ok" style="vertical-align:middle">Live data</span></h2>
+  <p>{{INTRO_DIRECT_VS_PLATFORM_SPLIT}}</p>
+  <table>
+    <tr><th>Domain</th><th class="num">Shared keywords</th><th>Type</th></tr>
+    <tr><td><b>{{DOMAIN}}</b></td><td class="num">{{N}}</td><td>— (subject)</td></tr>
+    <!-- ≥7 competitor rows; tag direct competitors -->
+    <tr><td>{{COMPETITOR}}</td><td class="num">{{N}}</td><td><span class="tag t-high">Direct competitor</span> | {{or platform type}}</td></tr>
+  </table>
+  <div class="callout"><b>Read:</b> {{WHAT_THE_FIELD_TELLS_US}} <span class="src">Source: {{FILE}}</span></div>
+
+<!-- §10 ON-PAGE DETAIL — ALL audited money pages, one row each -->
+  <h2>On-Page Detail — Titles, Meta, H1 ({{N}} pages)</h2>
+  <p>{{SUMMARY_LINE: coverage stats — canonicals, noindex, og}}</p>
+  <table>
+    <tr><th>Page</th><th>Title (len)</th><th>Meta desc (len)</th><th>H1</th><th>Issue</th></tr>
+    <!-- ONE ROW PER AUDITED PAGE — no sampling -->
+    <tr><td>{{PAGE}}</td><td>{{TITLE_OR_LEN}}</td><td>{{LEN_OR_MISSING}}</td><td>{{H1}}</td><td>{{ISSUE_OR_OK}}</td></tr>
+  </table>
+  <p><b>Cannibalization / duplication:</b> {{DUPLICATE_TITLE_PATTERNS_AND_BOILERPLATE_DESCRIPTIONS}}</p>
+  <p><b>Confirmed clean:</b> {{WHAT_PASSED}}</p>
+</div>
+
+<!-- §11 PERFORMANCE DETAIL — FIELD VS LAB -->
+<div class="page pgbreak">
+  <h2>Performance Detail — Field vs Lab</h2>
+  <p>Field data (CrUX, real users, p75) is the ranking signal; lab is diagnostic only.</p>
+  <h4>Field data (real users)</h4>
+  <table>
+    <tr><th>Metric</th><th>Mobile</th><th>Desktop</th></tr>
+    <tr><td>LCP</td><td>{{V}} — {{verdict}}</td><td>{{V}} — {{verdict}}</td></tr>
+    <tr><td>INP</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td>CLS</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td>FCP</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td>TTFB</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td><b>CWV verdict</b></td><td><b>{{PASS/FAIL (reason)}}</b></td><td><b>{{PASS/FAIL}}</b></td></tr>
+  </table>
+  <h4>Lab data (throttled — diagnostic only)</h4>
+  <table>
+    <tr><th>Metric</th><th>Mobile</th><th>Desktop</th></tr>
+    <tr><td>Performance score</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td>LCP (lab)</td><td>{{V}}</td><td>{{V}}</td></tr>
+    <tr><td>CLS (lab)</td><td>{{V}} {{artifact note if differs from field}}</td><td>{{V}}</td></tr>
+    <tr><td>Total Blocking Time</td><td>{{V}}</td><td>{{V}}</td></tr>
+  </table>
+  <div class="callout"><b>Single highest-impact fix:</b> {{DIAGNOSIS_W_CULPRIT_SELECTORS; label lab artifacts explicitly}} <span class="src">{{FILE}}</span></div>
+</div>
+
+<!-- §12 PER-CATEGORY DETAIL -->
+<div class="page pgbreak">
+  <h2>Content &amp; E-E-A-T Detail</h2>
+  <p>{{AUTHORSHIP_STATUS · LEADERSHIP/TRUST_SIGNALS · WORDCOUNTS_PER_PAGE_TYPE · BLOG_QUALITY_AND_INTENT_ALIGNMENT}}</p>
+  <table><tr><th>Dimension</th><th>Finding</th><th>Status</th></tr>
+    <tr><td>{{DIMENSION}}</td><td>{{FINDING_WITH_EVIDENCE}}</td><td>{{PASS/FAIL}}</td></tr>
+  </table>
+  <h2>Schema / Structured Data Detail</h2>
+  <table><tr><th>Page type</th><th>Schema present</th><th>Issues</th></tr>
+    <tr><td>{{TYPE}}</td><td>{{TYPES_FOUND}}</td><td>{{VALIDATION_ISSUES}}</td></tr>
+  </table>
+  <p><b>Entity consistency:</b> {{NAME/SAMEAS/CONFLICTS}} · <b>Top opportunities:</b> {{TOP_5}}</p>
+  <h2>AI Search Readiness Detail</h2>
+  <p>{{CRAWLER_POLICY_POSTURE · LLMS_TXT_STATUS_FACTUAL · CITABILITY · ENTITY_CLARITY · PLATFORM_NOTES}}</p>
+</div>
+
+<!-- §13 PRIORITISED ACTION PLAN -->
+<div class="page pgbreak">
+  <h2>Prioritised Action Plan</h2>
+  <h3>Quick wins (high impact, low effort)</h3>
+  <table>
+    <tr><th>#</th><th>Action</th><th>Effort</th><th>Why (data-backed)</th></tr>
+    <tr><td>{{N}}</td><td>{{ACTION}}</td><td>{{EFFORT}}</td><td>{{DATA_BACKED_WHY}}</td></tr>
+  </table>
+  <h3>Strategic (compounding return)</h3>
+  <table>
+    <tr><th>#</th><th>Action</th><th>Effort</th><th>Why</th></tr>
+    <tr><td>{{L}}</td><td>{{ACTION}}</td><td>{{EFFORT}}</td><td>{{WHY}}</td></tr>
+  </table>
+  <h3>Sequencing</h3>
+  <p>{{ORDER + the ~28-day CrUX re-measure note + re-audit cadence}}</p>
+  <h3>Data to unlock</h3>
+  <ul><li>{{PENDING_SECTION → UNLOCK_STEP}}</li></ul>
+</div>
+
+<!-- §14 APPENDIX -->
+<div class="page pgbreak">
+  <h2>Appendix — Data Sources &amp; Integrity</h2>
+  <p>{{N_CALLS}} API calls, total cost <b>${{COST}}</b>, captured {{DATE}}. Every figure traces to a saved response.</p>
+  <table>
+    <tr><th>Data class</th><th>Endpoint(s)</th><th>Status</th></tr>
+    <tr><td>{{CLASS}}</td><td>{{ENDPOINTS}}</td><td><span class="tag t-ok">OK</span> | <span class="tag t-pend">Pending — {{CODE}}</span></td></tr>
+  </table>
+  <h3>Integrity controls</h3>
+  <ul>
+    <li>{{WHAT_WAS_VERIFIED_HOW / JUNK_FILTERED / QUIRKS_DISCLOSED}}</li>
+  </ul>
+  <h3>Evidence corpus</h3>
+  <ul><li>{{PAGES + SITEMAPS + PSI + API_RESPONSE_DIRS}}</li></ul>
+  <!-- include a corrections-vs-prior table when a prior report exists -->
+  <div class="footer">
+    {{CLIENT}} — Full SEO Audit {{VERSION}} · Prepared by {{PREPARER}} · {{DATE}} ·
+    {{METHOD_ONE_LINER}} · Overall {{SCORE}}/100 {{PENDING_NOTE}}
+  </div>
+</div>
+
+</body>
+</html>

@@ -105,10 +105,21 @@ and re-score once those land. State the exclusion explicitly.
 
 ## Report assembly order
 
-Business Understanding (Phase 0) → Executive summary + composite score →
-Priority issues (adversarially verified) → per-category detail → **Keyword Research**
-→ **Local SEO / GBP** (if applicable) → action plan (effort-tagged, dependency-ordered)
-→ appendix (evidence log, what was NOT covered, corrections vs any prior report).
+**The report MUST follow `references/report-template.md` — the depth contract** (14
+required sections extracted from the gold-standard Strokes Exhibits report), rendered
+with the HTML skeleton at `assets/report-template.html` and delivered as a PDF. The
+contract's floors are mandatory: per-page on-page table for ALL audited money pages,
+position-distribution + ≥10-row quick-wins tables, multi-market seed table, competitor
+gap table, field-vs-lab performance tables, per-category detail sections (Content,
+Schema, AI-readiness), a "What's genuinely strong" section, the action plan, and the
+API call-log appendix. A compressed summary-only report is a contract violation.
+
+Section order: Cover → Data Integrity & Methodology → Executive summary (KPIs + score
++ scorecard + 5 moves) → Priority issues (adversarially verified, evidence cards) →
+Strengths → Organic Visibility → **Keyword Research** → **Local SEO / GBP** (if
+applicable; else a one-line skip note) → Competitive Landscape → On-Page detail →
+Performance detail → per-category detail → action plan → appendix (call log, integrity
+controls, corrections vs any prior report).
 
 **Final write-back (always).** After the report is assembled, dispatch the **seo-learn**
 agent to distill durable, evidence-tagged client facts into the knowledge store, supersede
