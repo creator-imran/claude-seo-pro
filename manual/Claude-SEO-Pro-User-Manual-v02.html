@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude SEO Pro — User Manual v02</title>
+<style>
+:root{--ink:#1a1a2e;--muted:#5a5a72;--line:#e3e3ee;--brand:#0b3d91;--brand2:#1466d6;--accent:#c8102e;
+--ok:#2e7d32;--warn:#b87800;--bad:#c53030;--bg:#fff;--side:#f7f8fc}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);font-size:14px;line-height:1.6;background:var(--bg)}
+a{color:var(--brand2);text-decoration:none}a:hover{text-decoration:underline}
+code{background:#f3f4f9;border:1px solid #e3e3ee;border-radius:4px;padding:1px 5px;font-family:Consolas,monospace;font-size:12.5px;word-break:break-word}
+pre{background:#101426;color:#dde3f5;border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.5px;line-height:1.5;font-family:Consolas,monospace}
+pre code{background:none;border:none;color:inherit;padding:0}
+h1{font-size:30px;color:var(--brand);line-height:1.2}
+h2{font-size:22px;color:var(--brand);border-bottom:3px solid var(--brand);padding-bottom:6px;margin-top:44px}
+h3{font-size:16.5px;margin-top:26px;color:var(--ink)}
+h4{font-size:13.5px;color:var(--brand2);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 6px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:12.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f5f7fc;color:var(--brand);font-size:11px;text-transform:uppercase}
+tr:nth-child(even) td{background:#fafbfe}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:290px;flex-shrink:0;background:var(--side);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar h3{margin:4px 0 10px;font-size:14px;color:var(--brand)}
+.sidebar input{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;margin-bottom:10px}
+.sidebar a{display:block;padding:4px 8px;border-radius:6px;font-size:12.5px;color:var(--ink)}
+.sidebar a:hover{background:#e9eefb;text-decoration:none}
+.sidebar a.l2{padding-left:22px;color:var(--muted);font-size:12px}
+.content{flex:1;max-width:920px;padding:34px 48px 80px}
+.tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:20px;color:#fff;white-space:nowrap;vertical-align:middle}
+.t-new{background:var(--accent)}.t-pro{background:var(--brand)}.t-up{background:#6b6b85}.t-ok{background:var(--ok)}
+.callout{border-left:5px solid var(--brand2);background:#f3f7fe;padding:11px 15px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.warn{border-color:var(--accent);background:#fdf2f4}
+.callout.good{border-color:var(--ok);background:#f1faf2}
+.callout.see{border-color:var(--warn);background:#fdf8ec}
+.callout .lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:9px;padding:10px 16px;margin:10px 0;background:#fff}
+details summary{cursor:pointer;font-weight:600;color:var(--brand);font-size:13.5px}
+details[open]{background:#fcfcff}
+.step{display:flex;gap:12px;margin:12px 0}
+.step .n{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.kbd{background:#eef1f8;border:1px solid #cdd3e5;border-bottom-width:2px;border-radius:5px;padding:0 6px;font-family:Consolas,monospace;font-size:12px}
+.cover{min-height:90vh;display:flex;flex-direction:column;justify-content:center;border-left:10px solid var(--brand);padding-left:30px}
+.cover .eyebrow{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.cover h1{font-size:44px;margin:.2em 0}
+.cover .sub{font-size:17px;color:var(--muted);max-width:640px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 26px;margin:12px 0}
+.footer{margin-top:60px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--muted)}
+.pgbreak{page-break-before:always}
+@media print{
+  .sidebar{display:none}
+  .content{max-width:100%;padding:18px 26px}
+  pre{white-space:pre-wrap}
+  details{border:none;padding:4px 0}
+  details summary{list-style:none}
+  h2{margin-top:26px}
+  table,pre,.callout,.step{break-inside:avoid}
+  a{color:var(--ink)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" id="sidebar">
+  <h3>Claude SEO Pro · Manual v02</h3>
+  <input type="text" id="tocfilter" placeholder="Filter sections… (type to search)" oninput="filterToc(this.value)">
+  <a href="#welcome">1 · Welcome</a>
+  <a href="#using">2 · Using this manual</a>
+  <a href="#quickstart">3 · 15-minute quick start</a>
+  <a href="#concepts">4 · Core concepts</a>
+  <a href="#concepts-arch" class="l2">Architecture</a>
+  <a href="#concepts-eip" class="l2">Evidence Integrity Protocol</a>
+  <a href="#concepts-pipeline" class="l2">The 4-phase audit</a>
+  <a href="#concepts-memory" class="l2">Client memory</a>
+  <a href="#install">5 · Installation</a>
+  <a href="#install-paths" class="l2">Three install paths</a>
+  <a href="#install-verify" class="l2">Verify + drift guard</a>
+  <a href="#install-update" class="l2">Updating</a>
+  <a href="#onboarding">6 · API onboarding (all 7 providers)</a>
+  <a href="#ob-dataforseo" class="l2">DataForSEO</a>
+  <a href="#ob-googlekey" class="l2">Google API key</a>
+  <a href="#ob-oauth" class="l2">GSC + GA4 (OAuth)</a>
+  <a href="#ob-gbp" class="l2">Google Business Profile</a>
+  <a href="#ob-firecrawl" class="l2">Firecrawl</a>
+  <a href="#ob-exa" class="l2">Exa</a>
+  <a href="#ob-slack" class="l2">Slack</a>
+  <a href="#firstaudit">7 · Your first full audit</a>
+  <a href="#report">8 · Reading & delivering the report</a>
+  <a href="#report-sections" class="l2">All 14 sections explained</a>
+  <a href="#report-linter" class="l2">The contract linter</a>
+  <a href="#report-pdf" class="l2">PDF generation</a>
+  <a href="#report-brand" class="l2">White-labeling</a>
+  <a href="#procmds">9 · Pro command reference</a>
+  <a href="#upcmds">10 · Upstream command reference (27)</a>
+  <a href="#knowledge">11 · Client knowledge & learning</a>
+  <a href="#routing">12 · Model routing & cost</a>
+  <a href="#slack">13 · Slack connector deployment</a>
+  <a href="#drift">14 · Drift monitoring</a>
+  <a href="#current">15 · Staying current (sync · CI · versions)</a>
+  <a href="#ops">16 · Maintenance & operations</a>
+  <a href="#trouble">17 · Troubleshooting encyclopedia</a>
+  <a href="#security">18 · Security & privacy</a>
+  <a href="#faq">19 · FAQ</a>
+  <a href="#glossary">20 · Glossary</a>
+  <a href="#appendix">21 · Appendix</a>
+</nav>
+<main class="content">
+
+<!-- COVER -->
+<div class="cover" id="top">
+  <div class="eyebrow">Operator's Manual · v02</div>
+  <h1>Claude SEO Pro</h1>
+  <div class="sub">The complete, hands-on guide to operating the evidence-verified SEO command center — from a blank machine to delivering white-labeled, client-grade audit reports. Written for an SEO manager with <b>no coding background</b>.</div>
+  <p style="margin-top:30px;color:var(--muted)">
+    <b>Manual version:</b> v02 · <b>Product version:</b> 1.1.0 · <b>Date:</b> June 2026<br>
+    <b>Supersedes:</b> Manual v01 (every section rewritten and expanded)<br>
+    <b>Interactive HTML:</b> use the sidebar to navigate and the filter box to search sections. Collapsible boxes (▸) hide deep-dives until you need them.
+  </p>
+</div>
+
+<!-- 1 WELCOME -->
+<h2 id="welcome">1 · Welcome — what you're holding</h2>
+<p><b>Claude SEO Pro</b> turns Claude Code into a complete SEO audit department: 30 skills, 19 specialist agents, live data from DataForSEO and Google, persistent per-client memory, and client-grade PDF reports — run by <b>one person, from one command line</b>, with every number in every report traceable to evidence.</p>
+<h3>The one story that explains every design decision</h3>
+<p>An early audit shipped findings that turned out to be <b>fabricated</b>. Subagents couldn't fetch the website, silently substituted "typical patterns for sites of this type," and the orchestrator stripped their warning caveats — promoting guesses to "Critical Issues." The client caught it.</p>
+<p>Everything distinctive about this system is a countermeasure to that incident:</p>
+<ul>
+  <li><b>Evidence Integrity Protocol</b> — every finding cites a captured file and line, or a named API response field. No source → it doesn't ship.</li>
+  <li><b>"Data pending", never guesses</b> — a blocked API produces an honest pending section with the exact error code and the unlock step.</li>
+  <li><b>A machine-enforced report contract</b> — a linter rejects reports that miss sections or compress into summaries.</li>
+  <li><b>Receipts</b> — every report's appendix lists every API call it made, with per-call status.</li>
+</ul>
+<div class="callout good"><span class="lbl">What this means for you</span><br>When a client asks <i>"how do you know?"</i>, the answer is in the report. That is the product.</div>
+<h3>What's new since Manual v01</h3>
+<table>
+<tr><th>Addition (v1.1.0)</th><th>Where in this manual</th></tr>
+<tr><td><span class="tag t-new">New</span> Report depth contract + machine linter (14 mandatory sections)</td><td><a href="#report">§8</a></td></tr>
+<tr><td><span class="tag t-new">New</span> White-label branding for client reports</td><td><a href="#report-brand">§8.4</a></td></tr>
+<tr><td><span class="tag t-new">New</span> Install drift guard (catches stale installs)</td><td><a href="#install-verify">§5.2</a></td></tr>
+<tr><td><span class="tag t-new">New</span> CI regression gate (68-assertion suite on every push)</td><td><a href="#current">§15</a></td></tr>
+<tr><td><span class="tag t-new">New</span> Plugin-marketplace one-command install</td><td><a href="#install-paths">§5.1</a></td></tr>
+<tr><td><span class="tag t-new">New</span> Roadmap + refused-features guardrail</td><td><a href="#current">§15</a></td></tr>
+<tr><td>Fixed: keyword-research preflight bug; timezone deprecations; stale-install incident</td><td><a href="#trouble">§17</a></td></tr>
+</table>
+
+<!-- 2 USING -->
+<h2 id="using">2 · How to use this manual</h2>
+<ul>
+  <li><b>New operator?</b> Read §3 (quick start) → §5 (install) → §6 (onboarding) → §7 (first audit). That's a working system in under an hour.</li>
+  <li><b>Looking something up?</b> Type in the sidebar filter box, or jump to §9–10 (commands), §17 (errors).</li>
+  <li><b>Conventions:</b> <code>like this</code> = type it exactly. <span class="kbd">Enter</span> = key press. Boxes marked ▸ expand on click. <span class="tag t-pro">Pro</span> = added by this distribution; <span class="tag t-up">Upstream</span> = inherited from the open-source core; <span class="tag t-new">New</span> = added in v1.1.0.</li>
+  <li><b>Terminals:</b> commands shown for Windows PowerShell; macOS/Linux differences are noted inline. Inside Claude Code, prefix any shell command with <code>!</code> to run it in your session.</li>
+</ul>
+<div class="callout"><span class="lbl">The two prompts you'll live in</span><br><b>Claude Code chat</b> — where you type <code>/seo</code> commands and converse. <b>Your terminal</b> — where you run installers, the wizard, and Python tools. Secrets are only ever typed in the terminal (masked), never in chat.</div>
+
+<!-- 3 QUICK START -->
+<h2 id="quickstart">3 · The 15-minute quick start</h2>
+<div class="step"><div class="n">1</div><div><b>Install</b> (Windows; see <a href="#install">§5</a> for macOS and marketplace paths):
+<pre>git clone https://github.com/creator-imran/claude-seo-pro.git
+powershell -ExecutionPolicy Bypass -File claude-seo-pro\install.ps1</pre></div></div>
+<div class="step"><div class="n">2</div><div><b>Onboard your APIs.</b> Start Claude Code (<code>claude</code>) and type <code>/seo-setup</code>. Claude walks you through each provider — minimum useful set: <b>DataForSEO</b> (rankings/keywords) + <b>Google API key</b> (real Core Web Vitals). Everything is optional; skip what you don't have.</div></div>
+<div class="step"><div class="n">3</div><div><b>Verify:</b> <code>/seo-setup verify</code> — you want green on the providers you configured, and <code>[INSTALL FRESH]</code> from the drift check.</div></div>
+<div class="step"><div class="n">4</div><div><b>Run your first audit:</b>
+<pre>/seo audit https://yourclient.com</pre>
+Expect 10–20 minutes: pre-fetch → parallel specialists → live data → report + PDF. Full walkthrough in <a href="#firstaudit">§7</a>.</div></div>
+<div class="step"><div class="n">5</div><div><b>Open the PDF</b> (path is stated at the end of the run), skim the Executive Summary, then read <a href="#report">§8</a> to understand every section.</div></div>
+<div class="callout see"><span class="lbl">If anything fails</span><br>§17 is the troubleshooting encyclopedia. The single most common first-day issue: DataForSEO's <b>IP whitelist</b> (<code>40207</code>) — see <a href="#e40207">§17</a>.</div>
+
+<!-- 4 CONCEPTS -->
+<h2 id="concepts">4 · Core concepts (10 minutes that make everything else obvious)</h2>
+
+<h3 id="concepts-arch">4.1 Architecture: skills, agents, engines</h3>
+<p>Three kinds of moving parts:</p>
+<table>
+<tr><th>Part</th><th>What it is</th><th>Examples</th></tr>
+<tr><td><b>Skills</b> (30)</td><td>Instruction packs that teach Claude a workflow. You invoke them as <code>/seo …</code> commands.</td><td><code>seo-audit</code>, <code>seo-schema</code>, <span class="tag t-pro">Pro</span> <code>seo-setup</code>, <code>seo-knowledge</code></td></tr>
+<tr><td><b>Agents</b> (19)</td><td>Specialist sub-workers a skill spawns in parallel — each analyzes one dimension (technical, content, schema…) and reports back with evidence.</td><td><code>seo-technical</code>, <code>seo-content</code>, <span class="tag t-pro">Pro</span> <code>seo-learn</code></td></tr>
+<tr><td><b>Engines</b> (4)</td><td><span class="tag t-pro">Pro</span> Python packages that do deterministic work: onboarding/credentials, client knowledge, model routing, the Slack connector.</td><td><code>onboarding/</code>, <code>knowledge/</code>, <code>routing/</code>, <code>connector/</code></td></tr>
+</table>
+<p>Where things live on your machine after install:</p>
+<pre>~/.claude/skills/          ← the 30 skills (seo, seo-audit, seo-setup, …)
+~/.claude/skills/seo/      ← shared scripts + the 4 Pro engines
+~/.claude/agents/          ← the 19 agent definitions
+~/.config/claude-seo/      ← YOUR data: API keys (owner-only), client knowledge,
+                              cache, branding.json, install-manifest.json</pre>
+<div class="callout"><span class="lbl">The golden separation</span><br>The <b>repo</b> (claude-seo-pro folder) is the product. <b>~/.claude</b> is the installed copy. <b>~/.config/claude-seo</b> is your private data — keys and client knowledge. The repo never contains your data; updates never touch your data.</div>
+
+<h3 id="concepts-eip">4.2 The Evidence Integrity Protocol</h3>
+<p>Eight rules wired into the audit skill itself. Worth knowing them, because they explain "odd" behaviors that are actually the system protecting you:</p>
+<details><summary>The 8 rules, and what each one looks like in practice</summary>
+<table>
+<tr><th>#</th><th>Rule</th><th>What you'll observe</th></tr>
+<tr><td>1</td><td>Pre-fetch all pages first; specialists read local files only</td><td>The audit starts by downloading dozens of pages to disk before any analysis</td></tr>
+<tr><td>2</td><td>A failed fetch is reported, never substituted</td><td>"Could not fetch /pricing (403)" instead of invented findings about the pricing page</td></tr>
+<tr><td>3</td><td>Every finding cites evidence (file:line or API field)</td><td>Each finding card has a small "Evidence:" line</td></tr>
+<tr><td>4</td><td>Specialist caveats are never stripped</td><td>You may see [VERIFY] markers survive into drafts — that's intentional</td></tr>
+<tr><td>5</td><td>No score without backing data</td><td>Backlinks shows PENDING in the scorecard rather than a made-up number</td></tr>
+<tr><td>6</td><td>CWV uses real-user field data; lab labeled as lab</td><td>"Lab LCP 18s (throttling artifact — field is 2.4s)"</td></tr>
+<tr><td>7</td><td>Schema is read from raw HTML</td><td>The fetcher saves raw HTML because rendered fetches strip JSON-LD</td></tr>
+<tr><td>8</td><td>What was NOT covered is reported</td><td>"Crawl sampled 50 of 181 sitemap URLs" in the appendix</td></tr>
+</table></details>
+
+<h3 id="concepts-pipeline">4.3 The 4-phase audit pipeline</h3>
+<p>A full <code>/seo audit</code> is not one step — it's four phases, in order:</p>
+<table>
+<tr><th>Phase</th><th>Name</th><th>What happens</th><th>Output</th></tr>
+<tr><td><b>0</b></td><td>Business Intelligence</td><td>Recalls everything already known about this client from the knowledge store, then infers business model, country, target markets, ideal customers, seed keyword themes — each with confidence + evidence</td><td><code>business-profile.json</code></td></tr>
+<tr><td><b>1</b></td><td>Evidence audit</td><td>Pre-fetches all money pages + sitemaps + robots; spawns parallel specialists (cheap models for extraction, stronger for reasoning); adversarially verifies Critical/High findings</td><td>per-dimension findings, all cited</td></tr>
+<tr><td><b>2</b></td><td>Keyword research</td><td>Live DataForSEO across the origin + detected markets: volumes, CPC, difficulty, intent, competitor gap; tiered into quick-wins / rescues / gaps</td><td>keyword tables + opportunity tiers</td></tr>
+<tr><td><b>3</b></td><td>Local / GBP</td><td>Only when the client is a local business: live Business Profile data, NAP consistency, reviews (skips itself with a note for national B2B firms)</td><td>GBP table or skip note</td></tr>
+<tr><td>→</td><td>Report + write-back</td><td>Assembles the 14-section report, lints it, generates the PDF, then the learning agent stores durable facts for next time</td><td>report .md/.html/.pdf + updated memory</td></tr>
+</table>
+
+<h3 id="concepts-memory">4.4 Client memory (why audit #2 is better than audit #1)</h3>
+<p>The system keeps a <b>persistent, per-client knowledge store</b> on disk — independent of any chat session or Claude model:</p>
+<ul>
+<li><b>Profile</b> — what the business is (model, markets, ICPs, seed themes)</li>
+<li><b>Facts</b> — durable, evidence-tagged learnings ("authors are CSS-hidden sitewide — evidence: 4 files cited"), each with confidence + source. Unsourced claims are force-downgraded to low confidence; transient metrics and anything secret-shaped are <b>rejected</b>.</li>
+<li><b>History</b> — the audit-score timeline (48 → 57 → …)</li>
+<li><b>Cache</b> — expensive API responses with freshness windows + provenance, so repeat audits don't re-pay for unchanged data and cached numbers stay citable</li>
+</ul>
+<p>Every audit <b>reads this first</b> (starts informed) and <b>writes back after</b> (gets smarter). See <a href="#knowledge">§11</a> to drive it manually.</p>
+
+<!-- 5 INSTALL -->
+<h2 id="install" class="pgbreak">5 · Installation</h2>
+<h3 id="install-paths">5.1 Three install paths</h3>
+<h4>Path A — Plugin marketplace <span class="tag t-new">New</span> (fastest; skills + agents)</h4>
+<pre>/plugin marketplace add creator-imran/claude-seo-pro
+/plugin install claude-seo-pro@creator-imran-claude-seo-pro</pre>
+<p>Requires Claude Code 1.0.33+ and GitHub access to the (private) repo. <b>Note:</b> the plugin route installs skills/agents; the Python engines, drift guard and white-label tooling come with the full installer (Path B/C) — use those for a complete operator seat.</p>
+<h4>Path B — Windows (PowerShell)</h4>
+<pre>git clone https://github.com/creator-imran/claude-seo-pro.git
+powershell -ExecutionPolicy Bypass -File claude-seo-pro\install.ps1</pre>
+<h4>Path C — macOS / Linux</h4>
+<pre>git clone https://github.com/creator-imran/claude-seo-pro.git
+bash claude-seo-pro/install.sh</pre>
+<p>What the installer does, in order: copies the 30 skills + 19 agents + scripts + the 4 engines into <code>~/.claude/</code> → <span class="tag t-new">New</span> stamps <code>~/.config/claude-seo/install-manifest.json</code> with the product version → installs Python report dependencies → offers guided onboarding (skip with <code>-NoOnboard</code> / <code>--no-onboard</code>).</p>
+<details><summary>Prerequisites & what to do if one is missing</summary>
+<table>
+<tr><th>Requirement</th><th>Check</th><th>If missing</th></tr>
+<tr><td>Claude Code CLI</td><td><code>claude --version</code></td><td>Install from claude.ai/claude-code</td></tr>
+<tr><td>Python 3.10+</td><td><code>python --version</code></td><td>python.org → install → re-open terminal</td></tr>
+<tr><td>Git</td><td><code>git --version</code></td><td><code>winget install Git.Git</code> (Windows) or Xcode tools (macOS)</td></tr>
+<tr><td>Node.js (only for DataForSEO/Firecrawl/Exa MCP servers)</td><td><code>node --version</code></td><td>nodejs.org LTS — you can install later; only those MCP servers need it</td></tr>
+</table></details>
+
+<h3 id="install-verify">5.2 Verify the install + the drift guard <span class="tag t-new">New</span></h3>
+<p>From the repo folder, anytime:</p>
+<pre>python tools/check_install.py</pre>
+<p>It hashes every Pro-owned file in the repo against the installed copy and prints one of:</p>
+<ul>
+<li><code>[INSTALL FRESH] installed skills match the repo.</code> — you're current.</li>
+<li><code>[INSTALL STALE] re-run install.ps1 / install.sh</code> — with a list of DRIFTED/MISSING files.</li>
+</ul>
+<div class="callout warn"><span class="lbl">Why this exists — a true story</span><br>A real audit once ran against <b>stale installed skills</b> because the installer wasn't re-run after the product gained new features. The audit still "worked" — on the old playbook. The drift guard makes that condition loud instead of silent. <b>Habit:</b> run it after every <code>git pull</code>.</div>
+<p><code>/seo-setup verify</code> also surfaces this check automatically when run from a repo checkout.</p>
+
+<h3 id="install-update">5.3 Updating to a new version</h3>
+<pre>cd claude-seo-pro
+git pull
+python tools/check_install.py        # will report STALE
+powershell -ExecutionPolicy Bypass -File install.ps1 -NoOnboard   # refresh
+python tools/check_install.py        # should now report FRESH</pre>
+<p>Your keys, client knowledge, cache and branding are in <code>~/.config/claude-seo/</code> — untouched by updates.</p>
+<details><summary>Uninstall</summary>
+<p>Delete the skill/agent folders the installer created under <code>~/.claude/skills/</code> (all <code>seo*</code> directories) and <code>~/.claude/agents/seo-*.md</code>. To remove your data too (keys, client memory): delete <code>~/.config/claude-seo/</code> — this is irreversible; the client knowledge store lives there.</p></details>
+
+<!-- 6 ONBOARDING -->
+<h2 id="onboarding" class="pgbreak">6 · API onboarding — all 7 providers, step by step</h2>
+<p>Two equivalent ways to run onboarding; both end up in the same secure store:</p>
+<pre>/seo-setup                                              ← in Claude Code (guided, recommended)
+python ~/.claude/skills/seo/onboarding/setup_wizard.py  ← directly in your terminal</pre>
+<div class="callout"><span class="lbl">Security model in one line</span><br>Keys are typed into a <b>masked terminal prompt</b> (never into chat), validated <b>live against the provider</b> before storage, then written to <code>~/.config/claude-seo/*.json</code> with owner-only permissions. Nothing is sent anywhere except the provider's own API. <code>/seo-setup rotate &lt;provider&gt;</code> replaces a key later.</div>
+<p>Status check anytime: <code>/seo-setup verify</code> or <code>python …/setup_wizard.py --check</code>. Configure a single provider: <code>--provider dataforseo</code> etc.</p>
+
+<h3 id="ob-dataforseo">6.1 DataForSEO — the off-site engine (most valuable single key)</h3>
+<p><b>Unlocks:</b> rankings, full keyword research (volume/CPC/difficulty/intent), competitor analysis & gap, business listings, AI-mention checks. Without it the audit is on-site only.</p>
+<div class="step"><div class="n">1</div><div>Create an account at <code>app.dataforseo.com/register</code>. Top up a small balance ($10–50 lasts a long time — a full audit's data is typically $0.10–$3).</div></div>
+<div class="step"><div class="n">2</div><div>Your credentials are the <b>API login (email) + API password</b> shown on the dashboard — not your site login password.</div></div>
+<div class="step"><div class="n">3</div><div>Run the wizard; it validates with a $0 auth call and a ~$0.01 data probe.</div></div>
+<div class="callout warn"><span class="lbl">THE classic trap: IP whitelist (error 40207)</span><br>DataForSEO accounts often have an IP-whitelist enabled. Your key can be <b>valid</b> while every <i>data</i> call is blocked until your machine's public IP is added at <code>app.dataforseo.com/api-access</code>. The validator detects this distinctly and tells you. <b>On home/mobile connections your IP rotates</b> — it will break again. Either disable the whitelist, or expect to re-add the new IP (find it: <code>curl https://api.ipify.org</code>). Full play-by-play: <a href="#e40207">§17</a>.</div>
+<details><summary>What the audit can and can't do at each DataForSEO subscription level</summary>
+<table>
+<tr><th>You have</th><th>Works</th><th>Shows as "Data pending"</th></tr>
+<tr><td>Base account + balance</td><td>Rankings, keyword research, competitors, listings, AI mentions</td><td>Backlinks (needs the separate Backlinks subscription — error <code>40204</code>)</td></tr>
+<tr><td>+ Backlinks subscription</td><td>Everything incl. referring domains / domain rating</td><td>—</td></tr>
+</table></details>
+
+<h3 id="ob-googlekey">6.2 Google API key — real Core Web Vitals (free)</h3>
+<p><b>Unlocks:</b> PageSpeed Insights + CrUX <b>field data</b> — what real Chrome users experience (the ranking signal), not just lab simulations. Free with normal quotas.</p>
+<div class="step"><div class="n">1</div><div>Go to <code>console.cloud.google.com/apis/credentials</code> → create/select a project → <b>Create credentials → API key</b>.</div></div>
+<div class="step"><div class="n">2</div><div>Enable the <b>PageSpeed Insights API</b> for the project (APIs &amp; Services → Library → search "PageSpeed").</div></div>
+<div class="step"><div class="n">3</div><div>Run the wizard — it validates the key without burning a full Lighthouse run.</div></div>
+
+<h3 id="ob-oauth">6.3 Google Search Console + GA4 (OAuth) — skippable, attach later</h3>
+<p><b>Unlocks:</b> indexation status, search performance (clicks/impressions/CTR/position), GA4 organic traffic trends. Needs <b>owner access</b> to the client's properties, so the wizard supports <b>[N]ow / [L]ater / [S]kip</b> — "Later" marks it pending and audits degrade gracefully ("Data pending — Google OAuth not connected").</p>
+<details><summary>Full OAuth setup when you're ready (10 minutes, one time)</summary>
+<div class="step"><div class="n">1</div><div>In the same Google Cloud project: enable <b>Search Console API</b> and <b>Google Analytics Data API</b>.</div></div>
+<div class="step"><div class="n">2</div><div>OAuth consent screen → External → add yourself as a test user.</div></div>
+<div class="step"><div class="n">3</div><div>Credentials → Create → <b>OAuth client ID → Desktop app</b> → download <code>client_secret.json</code>.</div></div>
+<div class="step"><div class="n">4</div><div>Run the wizard with the file path; a browser opens for consent; the token is stored owner-only. The <code>client_secret</code> itself is read from your file at runtime, never copied into the token.</div></div>
+</details>
+
+<h3 id="ob-gbp">6.4 Google Business Profile (OAuth) — for local-business clients</h3>
+<p><b>Unlocks:</b> first-party local insights (impressions, calls, direction requests). Needs the profile owner's consent. <b>If skipped</b>, local audits automatically fall back to DataForSEO's public listing data — labeled accordingly. Same OAuth pattern as §6.3; additionally requires GBP API access approval from Google (the wizard explains).</p>
+
+<h3 id="ob-firecrawl">6.5 Firecrawl — large/JS-heavy site crawling</h3>
+<p><b>Unlocks:</b> full-site crawling with JavaScript rendering — for SPAs and very large sites where the built-in fetcher isn't enough. Key from <code>firecrawl.dev/app/api-keys</code>; the validator checks your credit balance.</p>
+
+<h3 id="ob-exa">6.6 Exa — neural search for competitor/entity research</h3>
+<p><b>Unlocks:</b> semantic web search used in competitor discovery and entity research. Key from <code>dashboard.exa.ai/api-keys</code>; validated with a single 1-result probe.</p>
+
+<h3 id="ob-slack">6.7 Slack — the chat connector</h3>
+<p><b>Unlocks:</b> running audits from Slack (<code>/seo audit client.com</code> in a channel). Needs a Slack app's <b>signing secret + bot token</b>; the validator calls <code>auth.test</code>. Full deployment walkthrough in <a href="#slack">§13</a> — configure the provider here first, deploy the bridge there.</p>
+
+<div class="callout good"><span class="lbl">Minimum viable setup</span><br>Just <b>DataForSEO + Google API key</b> gives you the full 4-phase audit with live rankings, keyword research and real CWV. Everything else adds depth and can be attached later without re-doing anything.</div>
+
+<!-- 7 FIRST AUDIT -->
+<h2 id="firstaudit" class="pgbreak">7 · Your first full audit — a complete walkthrough</h2>
+<p>Type this in Claude Code and press <span class="kbd">Enter</span>:</p>
+<pre>/seo audit https://yourclient.com</pre>
+<p>Here is what happens, phase by phase, with what you should expect to <b>see</b> — so you can tell healthy progress from a problem:</p>
+<h3>Phase 0 — Business intelligence (1–2 min)</h3>
+<p>Claude first recalls the client's knowledge store (<i>"What we know about X… 12 learned facts… last score 57"</i> — or "no prior knowledge" on a first run), then infers the business profile from the homepage and confirms anything uncertain with you. <b>You may be asked 1–2 questions</b> ("Is KSA a real target market or just a translated page?") — answering well here makes Phase 2's keyword research dramatically better targeted.</p>
+<h3>Phase 1 — Evidence capture + parallel specialists (5–10 min)</h3>
+<p>You'll see pages being fetched to disk (dozens of URLs, each with an HTTP status), then several specialist agents launching <b>in parallel</b>. Expect names like <code>seo-technical</code>, <code>seo-content</code>, <code>seo-schema</code>, <code>seo-geo</code> with running token counts. Cheap models handle extraction; stronger ones do reasoning — this is the model router (<a href="#routing">§12</a>) saving you money automatically.</p>
+<div class="callout"><span class="lbl">Healthy signs</span><br>"50 fetches, 50 OK" · agents citing file paths · "adversarially verifying finding…" <br><span class="lbl" style="margin-top:6px;display:inline-block">Warning signs</span><br>fetch failures piling up (site blocking — the audit will say so honestly) · an agent reporting it cannot read its evidence (see §17).</div>
+<h3>Phase 2 — Live keyword research (2–5 min, ~$0.05–$1)</h3>
+<p>DataForSEO calls fan out: your rankings, position distribution, competitor set, keyword demand, the gap vs a real competitor. Every response is saved to disk — those files are the citations behind the report's tables.</p>
+<h3>Phase 3 — Local/GBP (skips itself for non-local businesses)</h3>
+<p>National B2B firm? You'll see a one-line skip note (that's contract-correct, not an omission). Local business? Live GBP data: rating, reviews, categories, photos, NAP comparison.</p>
+<h3>Assembly → linter → PDF → memory write-back (2–4 min)</h3>
+<p>The report is assembled to the 14-section contract, the linter checks it (<a href="#report-linter">§8.2</a>), the PDF is generated, and the learning agent proposes durable facts to remember (preview-then-ingest). The run ends by stating <b>where every deliverable is</b>.</p>
+<table>
+<tr><th>Deliverable</th><th>What it's for</th></tr>
+<tr><td><code>FULL-AUDIT-REPORT.md</code></td><td>Working markdown — grep-able, diff-able</td></tr>
+<tr><td><code>ACTION-PLAN.md</code></td><td>Prioritized actions with effort estimates</td></tr>
+<tr><td><code>&lt;client&gt;-seo-audit-&lt;YYYY-MM&gt;.pdf</code></td><td><b>The client deliverable</b> — white-labeled, contract-complete</td></tr>
+<tr><td>Evidence folder + saved API responses</td><td>The receipts — keep them with the engagement</td></tr>
+<tr><td>Knowledge-store update</td><td>Audit #2 starts informed</td></tr>
+</table>
+<details><summary>Cost anatomy of a real audit (receipts from production)</summary>
+<p>A real full live-data audit (Dubai client, 5 locales): <b>28 DataForSEO calls, $0.61 total</b>. A US B2B audit's data: ~$0.10. Claude token costs depend on site size; the router keeps extraction on the cheapest tier. Preview keyword-research cost before spending: <code>python ~/.claude/skills/seo/scripts/keyword_research.py --plan --seeds "…" --markets "US:en"</code>.</p></details>
+
+<!-- 8 REPORT -->
+<h2 id="report" class="pgbreak">8 · Reading & delivering the report</h2>
+<h3 id="report-sections">8.1 The 14 sections, and how to read each one</h3>
+<table>
+<tr><th>#</th><th>Section</th><th>How to read it / what to check</th></tr>
+<tr><td>1</td><td>Cover</td><td>Client, scope, version, date. White-labeled with <i>your</i> brand (§8.4).</td></tr>
+<tr><td>2</td><td>Data Integrity & Methodology</td><td><b>Read this first with a skeptical client.</b> How evidence was gathered; every pending data source with its exact error + unlock step.</td></tr>
+<tr><td>3</td><td>Executive Summary</td><td>The story in one page: 4 KPI cards, the score ring, the full category scorecard (PENDING rows greyed — honesty, not failure), the 5 highest-leverage moves.</td></tr>
+<tr><td>4</td><td>Priority Issues</td><td>Finding cards: severity → explanation → <b>verbatim evidence block</b> → fix → source. If a finding has no evidence line, it shouldn't be there — that's the contract.</td></tr>
+<tr><td>5</td><td>What's Genuinely Strong</td><td>Mandatory. A findings-only report reads as a hit job and loses the client.</td></tr>
+<tr><td>6</td><td>Organic Search Visibility</td><td>Position-distribution buckets (each with a "read" column) + the ≥10-row quick-wins table. Watch for the honesty pattern: quick-wins labeled "brand/noise" when that's the truth.</td></tr>
+<tr><td>7</td><td>Keyword Research</td><td>Seeds-by-market volumes/CPC, the competitor-gap table, opportunity tiers. Thin secondary markets are <i>said</i> to be thin.</td></tr>
+<tr><td>8</td><td>Local SEO & GBP</td><td>Field-by-field GBP table + cross-source NAP check — or an explicit one-line skip note for non-local clients.</td></tr>
+<tr><td>9</td><td>Competitive Landscape</td><td>Who shares your keyword footprint, <i>classified</i> (direct competitor vs directory/platform — you don't out-rank Wikipedia, you learn from it).</td></tr>
+<tr><td>10</td><td>On-Page Detail</td><td><b>One row per audited money page — all of them.</b> Title/desc lengths, H1s, per-page issues, cannibalization patterns, and what's confirmed clean.</td></tr>
+<tr><td>11</td><td>Performance (field vs lab)</td><td>Two separate tables. <b>Field = the ranking signal; lab = diagnostic only.</b> Lab artifacts are labeled (an 18s lab LCP next to a 2.4s field LCP is throttling, not reality).</td></tr>
+<tr><td>12</td><td>Per-category detail</td><td>Content/E-E-A-T, Schema, AI-readiness each get full depth — this is where the specialists' work lands.</td></tr>
+<tr><td>13</td><td>Action Plan</td><td>Quick-wins + strategic tables (effort + data-backed why) + sequencing + the "data to unlock" list.</td></tr>
+<tr><td>14</td><td>Appendix</td><td><b>The receipts:</b> every API call with status, integrity controls, evidence corpus, corrections vs any prior report.</td></tr>
+</table>
+<h3 id="report-linter">8.2 The contract linter <span class="tag t-new">New</span></h3>
+<p>Before any report ships, lint it (the audit does this automatically; you can run it yourself on any report):</p>
+<pre>python tools/lint_report.py path\to\report.html          # human verdict
+python tools/lint_report.py path\to\report.html --json   # machine-readable</pre>
+<table>
+<tr><th>Verdict</th><th>Meaning</th><th>Your move</th></tr>
+<tr><td><b>PASS</b></td><td>All 14 sections present, no leftover placeholders, depth floors met</td><td>Deliver</td></tr>
+<tr><td><b>WARN</b></td><td>Structure OK; depth floors or pending-cause notes flagged</td><td>Review the warnings, then deliver</td></tr>
+<tr><td><b>FAIL</b></td><td>Missing sections / unfilled placeholders / summary-only compression</td><td><b>Do not deliver.</b> Fix, re-lint</td></tr>
+</table>
+<h3 id="report-pdf">8.3 PDF generation</h3>
+<p>Automatic at the end of an audit. Manually, from any report HTML (Windows):</p>
+<pre>msedge --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="out.pdf" "file:///C:/path/report.html"</pre>
+<p>macOS/Linux: the equivalent <code>chrome --headless</code>. (WeasyPrint via <code>scripts/google_report.py</code> is an alternative chart-heavy generator when its dependencies are installed.)</p>
+<h3 id="report-brand">8.4 White-labeling <span class="tag t-new">New</span> — your brand on every report</h3>
+<pre>python ~/.claude/skills/seo/onboarding/branding.py show
+python ~/.claude/skills/seo/onboarding/branding.py set --preparer "Acme Digital" --primary "#16324f" --accent "#d4740e" --footer "Acme Digital — confidential" --logo "C:/acme/logo.png"
+python ~/.claude/skills/seo/onboarding/branding.py reset</pre>
+<p>Settings persist in <code>~/.config/claude-seo/branding.json</code>; every subsequent report picks them up (cover, colors, preparer line, footer, optional logo). Unset = clean neutral product branding. Invalid colors fall back safely — a typo can't break a client deliverable.</p>
+
+<!-- 9 PRO COMMANDS -->
+<h2 id="procmds" class="pgbreak">9 · Pro command reference</h2>
+<h3><code>/seo-setup</code> — onboarding · verify · rotate</h3>
+<pre>/seo-setup            # guided onboarding, provider by provider
+/seo-setup verify     # per-provider status + install-freshness check
+/seo-setup rotate dataforseo   # replace one key safely</pre>
+<h3><code>/seo-knowledge</code> — the client memory</h3>
+<pre>/seo-knowledge recall yourclient.com     # the briefing: profile + facts + score history
+/seo-knowledge remember yourclient.com   # record a fact (you'll be asked for evidence!)
+/seo-knowledge cache                     # cache stats / purge</pre>
+<div class="callout"><span class="lbl">Expect this</span><br>Facts you add <b>without evidence</b> are stored at forced-low confidence; transient metrics ("score is 61 right now") and anything that looks like a secret are <b>rejected</b>. That's the hygiene guard, not a bug.</div>
+<h3><code>/seo-learn</code> — manual learning pass</h3>
+<pre>/seo-learn yourclient.com</pre>
+<p>Distills durable facts from the latest audit evidence — preview first, then ingest. Runs automatically after full audits; run manually after big client conversations or site changes.</p>
+<h3><code>/seo-models</code> — model routing & cost</h3>
+<pre>/seo-models                       # show the routing policy + per-tier costs</pre>
+<p>Details and overrides in <a href="#routing">§12</a>.</p>
+<h3><code>/seo-connect</code> — the Slack connector</h3>
+<p>Configuration status, command surface, deployment guidance. Full deployment in <a href="#slack">§13</a>.</p>
+
+<!-- 10 UPSTREAM COMMANDS -->
+<h2 id="upcmds">10 · Upstream command reference (27 commands)</h2>
+<p><span class="tag t-up">Upstream</span> — inherited intact; the Pro layer feeds them better data and memory. Grouped by job:</p>
+<h4>Audit & analysis</h4>
+<table>
+<tr><th>Command</th><th>Use when…</th></tr>
+<tr><td><code>/seo audit &lt;url&gt;</code></td><td>The full 4-phase audit (§7). The flagship.</td></tr>
+<tr><td><code>/seo page &lt;url&gt;</code></td><td>One page, deeply — before/after a rewrite, landing-page checks</td></tr>
+<tr><td><code>/seo technical &lt;url&gt;</code></td><td>Crawlability/indexability/security/CWV across 9 categories, alone</td></tr>
+<tr><td><code>/seo content &lt;url&gt;</code></td><td>E-E-A-T + content quality + AI-citation readiness, alone</td></tr>
+<tr><td><code>/seo schema &lt;url&gt;</code></td><td>Detect → validate → generate Schema.org JSON-LD</td></tr>
+<tr><td><code>/seo images &lt;url&gt;</code></td><td>Alt text, formats, lazy-loading, CLS prevention, image SERP</td></tr>
+<tr><td><code>/seo sitemap &lt;url|generate&gt;</code></td><td>Audit an XML sitemap or generate one from templates</td></tr>
+<tr><td><code>/seo sxo &lt;url&gt;</code></td><td>"Why doesn't this well-optimized page rank?" — SERP-backwards intent analysis</td></tr>
+</table>
+<h4>AI search (GEO)</h4>
+<table>
+<tr><td style="width:34%"><code>/seo geo &lt;url&gt;</code></td><td>AI Overviews / ChatGPT / Perplexity readiness: crawler access, citability scoring, entity clarity — evidence-based (it will tell you llms.txt is <i>not</i> a confirmed citation lever)</td></tr>
+</table>
+<h4>Local</h4>
+<table>
+<tr><td style="width:34%"><code>/seo local &lt;url&gt;</code></td><td>GBP, citations, NAP, reviews, local schema, map pack</td></tr>
+<tr><td><code>/seo maps [command]</code></td><td>Geo-grid rank tracking, GBP audit via API, review intelligence, competitor radius</td></tr>
+</table>
+<h4>Research & strategy</h4>
+<table>
+<tr><td style="width:34%"><code>/seo plan &lt;type&gt;</code></td><td>Strategic plan by industry (saas, local, ecommerce, publisher, agency)</td></tr>
+<tr><td><code>/seo cluster &lt;keyword&gt;</code></td><td>SERP-overlap topic clustering → hub-and-spoke architecture</td></tr>
+<tr><td><code>/seo content-brief &lt;topic&gt;</code></td><td>Competitive content briefs with per-section word counts</td></tr>
+<tr><td><code>/seo competitor-pages &lt;url&gt;</code></td><td>"X vs Y" / "alternatives to X" page generation</td></tr>
+<tr><td><code>/seo programmatic &lt;url&gt;</code></td><td>Pages-at-scale planning with thin-content safeguards</td></tr>
+<tr><td><code>/seo backlinks &lt;url&gt;</code></td><td>Link profile via Moz/Bing/CommonCrawl (free) or DataForSEO</td></tr>
+<tr><td><code>/seo hreflang &lt;url&gt;</code></td><td>International/i18n audit + correct hreflang generation</td></tr>
+<tr><td><code>/seo ecommerce &lt;url&gt;</code></td><td>Product schema, Shopping/marketplace visibility</td></tr>
+<tr><td><code>/seo flow [stage]</code></td><td>Evidence-led FLOW framework prompts (41, CC BY 4.0)</td></tr>
+</table>
+<h4>Data & monitoring</h4>
+<table>
+<tr><td style="width:34%"><code>/seo google [command]</code></td><td>GSC / PageSpeed / CrUX history / Indexing / GA4 directly</td></tr>
+<tr><td><code>/seo dataforseo [command]</code></td><td>Live SERP/keyword/competitor data ad hoc</td></tr>
+<tr><td><code>/seo drift baseline|compare|history &lt;url&gt;</code></td><td>Snapshot SEO-critical elements; detect regressions later (§14)</td></tr>
+<tr><td><code>/seo firecrawl [command] &lt;url&gt;</code></td><td>Full-site crawl / site map (extension)</td></tr>
+<tr><td><code>/seo image-gen [use-case]</code></td><td>OG images, blog heroes via Gemini (extension)</td></tr>
+<tr><td><code>/seo bing</code>, <code>/seo unlighthouse</code>, <code>/seo ahrefs</code>, <code>/seo seranking</code>, <code>/seo profound</code></td><td>Further extensions: Bing/IndexNow, local multi-page Lighthouse, Ahrefs data, AI share-of-voice, LLM citation tracking</td></tr>
+</table>
+
+<!-- 11 KNOWLEDGE -->
+<h2 id="knowledge" class="pgbreak">11 · Client knowledge & learning — the system that gets smarter</h2>
+<p>Conversational use is §9 (<code>/seo-knowledge</code>, <code>/seo-learn</code>). Under the hood, per client (slug of the domain):</p>
+<pre>~/.config/claude-seo/clients/yourclient-com/
+  profile.json    ← business understanding (model, markets, ICPs, seeds)
+  facts.jsonl     ← evidence-tagged durable facts (append-only, dedup, supersede)
+  history.jsonl   ← audit-score timeline
+~/.config/claude-seo/cache/&lt;provider&gt;/   ← cached API responses + provenance</pre>
+<h4>What makes a fact "durable" (the guards)</h4>
+<table>
+<tr><th>Candidate</th><th>Outcome</th><th>Why</th></tr>
+<tr><td>"Targets KSA as a secondary market" + evidence</td><td>✅ stored (high)</td><td>Durable + sourced</td></tr>
+<tr><td>"Targets enterprise clients" (no evidence)</td><td>⚠ stored at <b>low</b></td><td>Unsourced → forced low confidence</td></tr>
+<tr><td>"Performance score is 30 right now"</td><td>❌ rejected</td><td>Transient metric → belongs in history, not facts</td></tr>
+<tr><td>"API key is AIza…"</td><td>❌ rejected</td><td>Secret-shaped content never enters memory</td></tr>
+</table>
+<p>When the truth changes, facts are <b>superseded</b>, not duplicated — memory gets more accurate, not just bigger. The cache refuses stale reads (expired = miss = re-fetch) and keeps provenance so even cached numbers stay citable.</p>
+<details><summary>Power use: the CLI underneath</summary>
+<pre>python ~/.claude/skills/seo/knowledge/store.py recall yourclient.com
+python ~/.claude/skills/seo/knowledge/store.py add-history yourclient.com --score 61 --note "post-CLS-fix re-audit"
+python ~/.claude/skills/seo/knowledge/learn.py preview --domain yourclient.com --file candidates.json
+python ~/.claude/skills/seo/knowledge/cache.py stats</pre></details>
+<div class="callout warn"><span class="lbl">Back this up</span><br><code>~/.config/claude-seo/clients/</code> is your accumulated client intelligence. Include it in your backups (see §16). It is deliberately NOT in the repo.</div>
+
+<!-- 12 ROUTING -->
+<h2 id="routing">12 · Model routing & cost control</h2>
+<p>Each audit task runs on the cheapest Claude model that does it well, decided at dispatch time. The main conversation stays on your session's model (switching it would invalidate the prompt cache — slower and pricier).</p>
+<table>
+<tr><th>Tier</th><th>Model</th><th>Audit work</th></tr>
+<tr><td>extraction</td><td>Haiku 4.5</td><td>Titles/metas/H1s/status/schema-presence from pre-fetched files</td></tr>
+<tr><td>verification</td><td>Sonnet 4.6</td><td>Adversarial double-check of Critical/High findings</td></tr>
+<tr><td>reasoning</td><td>Sonnet 4.6</td><td>E-E-A-T judgment, intent analysis, fact extraction</td></tr>
+<tr><td>synthesis</td><td>Opus 4.8</td><td>Cross-dimension prioritization, the report itself</td></tr>
+<tr><td>orchestration</td><td>Opus 4.8 (pinned)</td><td>The main loop</td></tr>
+</table>
+<p>Real example: a 60k-token extraction task costs <b>$0.11 on Haiku vs $0.55 on Opus</b> — multiplied across every specialist, every audit. Inspect and override:</p>
+<pre>/seo-models                                                   # show policy
+python ~/.claude/skills/seo/routing/model_router.py route --agent seo-technical
+python ~/.claude/skills/seo/routing/model_router.py estimate --tier extraction --in 60000 --out 10000
+python ~/.claude/skills/seo/routing/model_router.py set --force-model opus    # flagship-quality pass
+python ~/.claude/skills/seo/routing/model_router.py reset</pre>
+<div class="callout"><span class="lbl">Why cheap models are safe here</span><br>Extraction agents read <b>pre-fetched files</b> — there's nothing to hallucinate about; they're transcribing. Judgment work is routed up-tier. One observed limit: very large minified pages (300KB+) can exhaust a small model's turn budget — if a specialist stalls, that's the first suspect (§17).</div>
+
+<!-- 13 SLACK -->
+<h2 id="slack" class="pgbreak">13 · Slack connector — audits from chat</h2>
+<p>For the manager who doesn't live in a terminal: type <code>/seo audit client.com</code> in Slack; the bridge verifies, authorizes, acknowledges in under 3 seconds, runs a headless audit, and posts the result back.</p>
+<h4>Security model (read before deploying)</h4>
+<ul>
+<li><b>Signature verification</b> — every request HMAC-checked against your signing secret with a 5-minute replay window; forged/stale requests get 401.</li>
+<li><b>Deny-by-default authorization</b> — nobody can trigger audits until you allow-list their user/channel ID. Audits cost money; this is intentional.</li>
+<li><b>Secrets stay host-side</b> — the bot token/signing secret live in <code>~/.config/claude-seo/slack.json</code> on the machine running the bridge, never in Slack.</li>
+<li><b>Fixed command surface</b> — only commands you enable parse at all; URL targets are validated.</li>
+</ul>
+<details><summary>Deployment walkthrough (one-time, ~30 min)</summary>
+<div class="step"><div class="n">1</div><div>Create a Slack app (api.slack.com/apps) → add a slash command <code>/seo</code> pointing at your bridge URL → install to workspace. Note the <b>signing secret</b> and <b>bot token</b>.</div></div>
+<div class="step"><div class="n">2</div><div>Onboard the slack provider (§6.7) so the secrets are stored.</div></div>
+<div class="step"><div class="n">3</div><div>Configure operating policy in <code>~/.config/claude-seo/connector.json</code>: <code>enabled_commands</code> (e.g. <code>["audit","page"]</code>), <code>allowed_users</code> (Slack user IDs), model, timeout.</div></div>
+<div class="step"><div class="n">4</div><div>Run the bridge on a host that has Claude Code installed and is reachable by Slack (or via a tunnel):
+<pre>python ~/.claude/skills/seo/connector/slack_bridge.py --port 8743
+python ~/.claude/skills/seo/connector/slack_bridge.py --selftest   # offline sanity first</pre></div></div>
+<div class="step"><div class="n">5</div><div>In Slack: <code>/seo audit https://client.com</code> → expect the "running…" ack, then the result post. Unauthorized users get a polite denial (by design).</div></div>
+<p>Full deploy doc: <code>docs/CONNECTOR.md</code>. WhatsApp: planned as an adapter on the same runner.</p></details>
+<div class="callout see"><span class="lbl">Honest status</span><br>The connector's security core (signatures, authorization, parsing, runner) is unit-tested in CI. The live Slack round-trip is <b>your deployment step</b> — it needs your Slack app and a reachable host.</div>
+
+<!-- 14 DRIFT -->
+<h2 id="drift" class="pgbreak">14 · Drift monitoring — "did anything break?"</h2>
+<p>Git for your client's on-page SEO. Capture a baseline after every audit/fix cycle; compare any time something ships:</p>
+<pre>/seo drift baseline https://client.com     # snapshot SEO-critical elements (SQLite)
+/seo drift compare  https://client.com     # diff current site vs baseline, severity-tagged
+/seo drift history  https://client.com     # the change timeline</pre>
+<p><b>The workflow that earns retainers:</b> baseline after delivery → client's dev team ships things → <code>compare</code> before your monthly check-in → walk in saying "your release on the 14th dropped canonical tags on 12 pages" with the diff to prove it. Pair with the knowledge store's score history for the long-run trend conversation.</p>
+
+<!-- 15 STAYING CURRENT -->
+<h2 id="current">15 · Staying current — sync, CI, versions</h2>
+<h4>Upstream sync (you benefit from the open-source project forever)</h4>
+<pre>python tools/sync_upstream.py --dry-run      # preview upstream changes (also the provenance check)
+python tools/sync_upstream.py --tag vX.Y.Z   # vendor a new upstream release</pre>
+<p>Pro-owned files are protected by a skip-list; the one in-place patch re-applies as an idempotent overlay that <b>fails loudly</b> if upstream moves an anchor. A weekly GitHub Action does this automatically and opens a reviewable PR — never auto-merges. A clean dry-run reports <b>exactly one</b> changed file (the managed overlay): that's your proof the fork is still <i>upstream + overlay + additions</i>.</p>
+<h4>CI <span class="tag t-new">New</span></h4>
+<p>Every push/PR runs: the 68-assertion adversarial component suite · repo integrity (compile-all, JSON validity, secret scan, no client data) · overlay check · report-linter self-test. All stdlib, offline, no keys needed. Check the repo's <b>Actions</b> tab — green before you pull, green before you deploy to a client seat.</p>
+<h4>Versioning</h4>
+<p><code>VERSION.md</code> is the human ledger (what's upstream vs Pro, version history); <code>system-version.json</code> is the machine manifest; the installed stamp is in <code>~/.config/claude-seo/install-manifest.json</code>. The roadmap — including the <b>refused-features list</b> (no hosted dashboard, no own crawler, no multi-tenant SaaS: they'd destroy the local-first differentiation) — is <code>docs/ROADMAP-7-to-9.md</code>.</p>
+
+<!-- 16 OPS -->
+<h2 id="ops">16 · Maintenance & operations</h2>
+<table>
+<tr><th>Cadence</th><th>Task</th><th>How</th></tr>
+<tr><td>After every <code>git pull</code></td><td>Refresh + verify install</td><td><code>install.ps1 -NoOnboard</code> → <code>python tools/check_install.py</code> → FRESH</td></tr>
+<tr><td>Monthly</td><td>Re-pull rankings; drift compare per client</td><td><code>/seo dataforseo</code> · <code>/seo drift compare</code></td></tr>
+<tr><td>~28 days after CWV fixes</td><td>Re-measure field data</td><td>CrUX is a trailing window — earlier re-tests mislead</td></tr>
+<tr><td>Quarterly</td><td>Rotate API keys</td><td><code>/seo-setup rotate &lt;provider&gt;</code></td></tr>
+<tr><td>Weekly (automated)</td><td>Upstream-sync PR review</td><td>GitHub Actions opens it; you review & merge</td></tr>
+<tr><td>Always</td><td>Back up client intelligence</td><td>Include <code>~/.config/claude-seo/</code> in backups (keys + knowledge + branding)</td></tr>
+</table>
+<details><summary>Moving to a new machine / setting up a second seat</summary>
+<ol>
+<li>Clone the repo, run the installer.</li>
+<li>Run <code>/seo-setup</code> — keys are re-entered per machine (they are deliberately not in the repo; each seat holds its own).</li>
+<li>To carry client memory: copy <code>~/.config/claude-seo/clients/</code> from the old machine.</li>
+<li><code>python tools/check_install.py</code> → FRESH; <code>/seo-setup verify</code> → green.</li>
+</ol></details>
+
+<!-- 17 TROUBLESHOOTING -->
+<h2 id="trouble" class="pgbreak">17 · Troubleshooting encyclopedia</h2>
+<p>Errors you may actually meet, with cause and fix. Every one of these has been hit (and solved) in real operation.</p>
+<table>
+<tr><th>Symptom / code</th><th>Cause</th><th>Fix</th></tr>
+<tr id="e40207"><td><code>40207 Access denied. Your IP is not whitelisted</code> — DataForSEO auth OK but every data call fails</td><td>The account's IP-whitelist doesn't include this machine's current public IP. <b>Dynamic IPs rotate</b> — this recurs after router restarts/mobile hotspots.</td><td>Get your IP (<code>curl https://api.ipify.org</code>) → add at <code>app.dataforseo.com/api-access</code> → retry. Recurs often? Disable the whitelist. The validator and the audit both detect this distinctly and will not fabricate around it.</td></tr>
+<tr><td><code>40204 … Backlinks subscription required</code></td><td>DataForSEO Backlinks is a separate subscription</td><td>Activate it (app.dataforseo.com/backlinks-subscription) or supply Moz/Bing creds — until then the Backlinks section honestly shows Data pending</td></tr>
+<tr><td><code>40501 Invalid Field</code> on Labs calls for some country/language pairs</td><td>DataForSEO Labs doesn't support every locale combination (e.g. en-language ideas in KSA/Qatar)</td><td>The keyword module falls back to Google Ads volume data for those markets and says so in the report's method notes</td></tr>
+<tr><td>Audit report shows "Data pending — Google OAuth not connected"</td><td>GSC/GA4 onboarding was skipped/deferred</td><td>Run <code>/seo-setup</code>, choose the Google OAuth provider, complete the browser consent (§6.3)</td></tr>
+<tr><td>PSI / CWV check times out</td><td>PageSpeed runs a live Lighthouse — 60s is often not enough</td><td>Re-run; allow ~2 minutes per strategy (mobile/desktop). One strategy at a time helps</td></tr>
+<tr><td>Lab CWV terrifying (LCP 18s) but field fine</td><td>Lab throttling artifact, not reality</td><td>Trust field (CrUX) — it's the ranking signal. The report labels lab as diagnostic-only by contract</td></tr>
+<tr><td><code>[INSTALL STALE]</code> from check_install / odd audit behavior after an update</td><td>Repo updated but installer not re-run — audits run on old skills</td><td><code>install.ps1 -NoOnboard</code> (or install.sh) → re-check → FRESH. This exact incident happened in production; the guard exists because of it</td></tr>
+<tr><td>Report linter FAIL: "unfilled template placeholders"</td><td>A generated report still contains <code>{{TOKENS}}</code></td><td>The generation step missed substitutions — re-run report assembly; never hand-deliver a FAILed report</td></tr>
+<tr><td>Report linter FAIL: missing sections</td><td>Summary-only report (the pre-contract failure mode)</td><td>Re-assemble against <code>references/report-template.md</code>; every section is mandatory (pending ≠ omitted)</td></tr>
+<tr><td>A specialist agent stalls on a huge page</td><td>300KB+ minified HTML can exhaust a small model's turn budget</td><td>Re-run that dimension; if persistent, force a stronger tier: <code>/seo-models</code> → force-model sonnet for the run</td></tr>
+<tr><td>Slack: <code>401 invalid signature</code></td><td>Wrong signing secret, or request older than the 5-min replay window</td><td>Re-check the secret in <code>slack.json</code> matches the app; check host clock skew</td></tr>
+<tr><td>Slack: "you're not authorized to run audits"</td><td>Deny-by-default — user/channel not on the allow-list</td><td>Add the Slack user ID to <code>connector.json → allowed_users</code> (intentional friction; audits cost money)</td></tr>
+<tr><td>OAuth browser window never opens (headless/server)</td><td>OAuth needs a human browser consent</td><td>Run onboarding once on a desktop machine; copy the token from <code>~/.config/claude-seo/</code> to the server seat</td></tr>
+<tr><td>PowerShell: piping output into <code>python -c</code> gives JSON errors</td><td>Known PS quirk — stdin arrives empty</td><td>Write to a file and read it, or use Select-String on the output instead of piping into Python</td></tr>
+<tr><td><code>git push</code> rejected / "not a repository"</td><td>Folder not initialized or remote missing</td><td>See <code>docs/PUBLISH.md</code>; the publish script handles init + remote + secret-guard in one step</td></tr>
+</table>
+<div class="callout"><span class="lbl">When something else breaks</span><br>Ask Claude in-session — it has the full system context. Include the exact error text. For reproducible bugs, the CI suite (<code>python tests/test_owned_components.py</code>) tells you in seconds whether the core is healthy on your machine.</div>
+
+<!-- 18 SECURITY -->
+<h2 id="security">18 · Security & privacy model</h2>
+<table>
+<tr><th>Asset</th><th>Where it lives</th><th>Protection</th></tr>
+<tr><td>API keys</td><td><code>~/.config/claude-seo/*.json</code></td><td>Owner-only (0600/ACL) · entered masked in terminal · never in chat, repo, or git · validated then stored</td></tr>
+<tr><td>OAuth tokens</td><td>same store</td><td>client_secret read from your file at runtime, never copied into tokens</td></tr>
+<tr><td>Client knowledge & cache</td><td><code>~/.config/claude-seo/clients|cache/</code></td><td>Owner-only · gitignored belt-and-suspenders · secret-shaped content rejected by the learn guards</td></tr>
+<tr><td>Slack secrets</td><td><code>slack.json</code> host-side</td><td>HMAC verification + replay window + deny-by-default authorization</td></tr>
+<tr><td>The repo</td><td>GitHub (private)</td><td>CI secret-scans every push; publish script has a staged-secret guard; tracked-file scan is clean</td></tr>
+<tr><td>Network</td><td>—</td><td>Calls go only to each provider's own endpoint. No telemetry, no third-party relay. SSRF/DNS-rebinding-safe fetchers inherited from upstream (83 bypass-class tests)</td></tr>
+</table>
+<p>Threat model and removal procedures: <code>docs/SECURITY.md</code>.</p>
+
+<!-- 19 FAQ -->
+<h2 id="faq">19 · FAQ</h2>
+<details><summary>Do I need to know how to code?</summary><p>No. You type <code>/seo</code> commands in Claude Code and occasionally paste a command into a terminal (this manual gives you every one verbatim). The system was built for exactly this profile.</p></details>
+<details><summary>Does it work with zero API keys?</summary><p>Yes — the on-site audit (technical, content, schema, on-page, AI-readiness) runs from captured HTML alone. Keys add the off-site picture; each missing source becomes an honest "Data pending" section, never a guess.</p></details>
+<details><summary>What does an audit cost?</summary><p>API data: typically $0.10–$3 (real receipt: 28 calls, $0.61, five locales). Claude tokens: depends on site size; the model router keeps the bulk on the cheapest tier. Preview keyword costs before spending with <code>--plan</code>.</p></details>
+<details><summary>Why does the report say "Data pending" instead of just showing a number?</summary><p>Because the alternative is making the number up. Pending sections carry the exact error and the unlock step — fix the access, re-run, the section fills in. This is the product's core promise.</p></details>
+<details><summary>Can I rebrand reports for my agency?</summary><p>Yes — §8.4. One command sets preparer/colors/logo/footer; every later report uses it. No per-report work, no template editing.</p></details>
+<details><summary>How do upstream improvements reach me?</summary><p>A weekly Action vendors the latest upstream release, protects all Pro files, re-applies the managed patch, and opens a PR for your review. Manually: <code>python tools/sync_upstream.py --tag vX.Y.Z</code>.</p></details>
+<details><summary>Multiple clients — do they see each other's data?</summary><p>No. Knowledge is stored per client (per-domain folders). Reports are generated per client. Nothing is multi-tenant because nothing is hosted — it's all on your machine.</p></details>
+<details><summary>Is my client's data sent anywhere?</summary><p>Page content goes to Anthropic (that's Claude analyzing it) and queries go to the data providers you enabled (DataForSEO, Google). Nothing else. No analytics, no telemetry, no vendor cloud holding your audits.</p></details>
+<details><summary>What's deliberately NOT in this product?</summary><p>A hosted dashboard, multi-tenant SaaS, our own crawler, SLAs — see the refused-features list in <code>docs/ROADMAP-7-to-9.md</code>. They'd destroy the local-first differentiation that makes this trustworthy.</p></details>
+
+<!-- 20 GLOSSARY -->
+<h2 id="glossary">20 · Glossary</h2>
+<table>
+<tr><td><b>CWV / field vs lab</b></td><td>Core Web Vitals. <i>Field</i> = real Chrome users (CrUX, the ranking signal); <i>lab</i> = simulated throttled load (diagnostic only)</td></tr>
+<tr><td><b>CLS / LCP / INP / TTFB</b></td><td>Layout shift (≤0.1 good) / largest paint (≤2.5s) / interaction delay (≤200ms) / server response time</td></tr>
+<tr><td><b>E-E-A-T</b></td><td>Experience, Expertise, Authoritativeness, Trust — Google's content-quality lens</td></tr>
+<tr><td><b>GEO / AI search</b></td><td>Optimizing to be cited by AI Overviews/ChatGPT/Perplexity — per Google, the same ranking systems as classic search</td></tr>
+<tr><td><b>KD / Vol / CPC / intent</b></td><td>Keyword difficulty (0–100) / monthly searches / ad cost-per-click / what the searcher wants (informational, commercial…)</td></tr>
+<tr><td><b>GBP / NAP</b></td><td>Google Business Profile / Name-Address-Phone consistency across the web</td></tr>
+<tr><td><b>Schema / JSON-LD</b></td><td>Structured data describing your entity/content to machines</td></tr>
+<tr><td><b>Overlay</b></td><td>The one managed patch this distribution applies to an upstream file, re-applied automatically on sync</td></tr>
+<tr><td><b>Evidence Integrity Protocol</b></td><td>The 8 anti-fabrication rules (§4.2)</td></tr>
+<tr><td><b>Knowledge store</b></td><td>The persistent per-client memory (§11)</td></tr>
+<tr><td><b>Drift (install)</b> / <b>drift (SEO)</b></td><td>Installed skills ≠ repo (§5.2) / the site changed vs baseline (§14)</td></tr>
+<tr><td><b>MCP</b></td><td>Model Context Protocol — how live-data servers (DataForSEO, Firecrawl, Exa) plug into Claude Code</td></tr>
+</table>
+
+<!-- 21 APPENDIX -->
+<h2 id="appendix">21 · Appendix</h2>
+<h4>File map (operator's view)</h4>
+<pre>claude-seo-pro/            ← the repo (the product; no client data ever)
+  skills/ agents/ scripts/ ← the SEO system (30 skills / 19 agents / 51 scripts)
+  onboarding/ knowledge/ routing/ connector/   ← the 4 Pro engines
+  tools/                   ← check_install · lint_report · sync_upstream · apply_overlay
+  tests/ + .github/        ← CI gate
+  docs/ manual/ VERSION.md ← documentation + provenance ledger
+~/.claude/                 ← installed copy (refresh with the installer)
+~/.config/claude-seo/      ← YOUR keys + client knowledge + cache + branding (back this up)</pre>
+<h4>Manual version history</h4>
+<table>
+<tr><th>Manual</th><th>Product</th><th>Notes</th></tr>
+<tr><td><b>v02</b> (this)</td><td>1.1.0</td><td>Complete rewrite: interactive HTML (sidebar, filter, collapsibles), per-command reference, full onboarding walkthroughs, troubleshooting encyclopedia, white-label & linter & drift-guard coverage</td></tr>
+<tr><td>v01</td><td>1.0.0</td><td>Initial manual — superseded; retained in git history</td></tr>
+</table>
+<h4>Credits</h4>
+<p>Built on the MIT-licensed <b>Claude SEO</b> by Agrici Daniel (see NOTICE and CONTRIBUTORS.md). Pro distribution by creator-imran. This manual: MIT, same as the product.</p>
+
+<div class="footer">Claude SEO Pro — User Manual v02 · Product 1.1.0 · June 2026 · Prepared by creator-imran · MIT (built on claude-seo by Agrici Daniel)</div>
+</main>
+</div>
+<script>
+function filterToc(q){q=q.toLowerCase();document.querySelectorAll('#sidebar a').forEach(function(a){a.style.display=a.textContent.toLowerCase().indexOf(q)>=0?'block':'none'})}
+if(location.search.indexOf('print')>=0){document.querySelectorAll('details').forEach(function(d){d.open=true})}
+window.addEventListener('beforeprint',function(){document.querySelectorAll('details').forEach(function(d){d.open=true})});
+</script>
+</body>
+</html>

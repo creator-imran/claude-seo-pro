@@ -32,6 +32,14 @@ jobs:
       - name: Overlay integrity (Evidence Integrity Protocol + fetch-path patch present)
         run: python tools/apply_overlay.py --check
 
+      - name: Report-linter self-test (raw template MUST fail the depth contract)
+        run: |
+          if python tools/lint_report.py skills/seo-audit/assets/report-template.html; then
+            echo "linter regression: unfilled template passed"; exit 1
+          else
+            echo "linter correctly rejects the unfilled template"
+          fi
+
       - name: Provenance — fork is upstream + overlay only (dry-run)
         run: python tools/sync_upstream.py --dry-run
         continue-on-error: true   # network-dependent (downloads upstream); informational

@@ -54,17 +54,21 @@ infra or auto-edit anything.
   (handle_slash decision path, HMAC, deny-by-default). The live round-trip needs a real
   Slack app + a reachable host — an operator deploy step. Documented.
 
-## Phase 2 — High-value capability (8 → 9) · NEXT, higher effort/risk
+## Phase 2 — High-value capability (8 → 9)
 
-Each is a real capability add and gets its own design + checkpoint before build.
+**Risk-free items shipped first** (additive, deterministic, offline-verifiable): the
+report-contract linter and marketplace distribution — see ✅ rows. The three items
+involving **live API spend or unvalidated integrations** (keyword fan-out execution,
+AI-visibility tracking, scheduled monitoring) remain gated on an explicit go-ahead,
+each with its own design + checkpoint before build.
 
 | Item | Why it's a 9/10 lever | Risk notes |
 |---|---|---|
 | **Live keyword fan-out execution** (the multi-stage merge behind `keyword_research.py`) | Productizes what's currently done by hand each audit | Preflight is fixed + live-verified; only the merge stages remain. Owned script → low risk. *(Surfaced during Phase-1 item 5.)* |
 | **AI-visibility tracking** (ChatGPT/Perplexity/AIO citation monitoring) | The category's defining 2026 capability; now table-stakes for agency tools | New live-API integration; substrate exists (DataForSEO AI-mentions + seranking/profound extensions). Owned skill → low structural risk |
 | **Scheduled monitoring + alerting** ("watch client weekly, alert on drops") | The #1 agency must-have; turns one-shot audits into retainers | Uses Claude Code cron/`/loop` + the Slack connector + drift snapshots. Owned |
-| **Audit-quality eval harness** (LLM-judge + rubric over our own reports) | The trust bar for *any* LLM product; catches "the audit got dumber" | Ship **advisory first** — LLM judges are flaky until calibrated (≥100 labeled examples). Do not gate releases on it until calibrated |
-| **Plugin-marketplace distribution** (`marketplace.json` + one-command install) | The ecosystem's front door; kills install friction | Bundle with a tagged release |
+| **Audit-quality eval harness** — deterministic half ✅ DONE | The trust bar for *any* LLM product; catches "the audit got dumber" | ✅ `tools/lint_report.py` ships: FAILs on missing sections / leftover placeholders / summary-only compression; validated against ground truth (gold-depth report PASSes, the known-shallow report FAILs, raw template FAILs); wired into the contract's self-check + a CI self-test. The **LLM-judge half stays deferred** — flaky until calibrated (≥100 labeled examples) |
+| **Plugin-marketplace distribution** ✅ DONE | The ecosystem's front door; kills install friction | ✅ `.claude-plugin/marketplace.json` rebranded to `creator-imran-claude-seo-pro` (was upstream's verbatim); README documents `/plugin marketplace add creator-imran/claude-seo-pro`. Note: plugin install covers skills/agents; the engines + drift guard still come via the installer |
 
 ## ❌ Refused features — the line we will NOT cross
 

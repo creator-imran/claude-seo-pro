@@ -4,11 +4,13 @@
 
 > **One SEO manager. One CLI. Enterprise-grade, client-ready audits — where every number traces to evidence, or the report says "Data pending."**
 
+[![CI](https://github.com/creator-imran/claude-seo-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/creator-imran/claude-seo-pro/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](VERSION.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue)](VERSION.md)
 [![Skills](https://img.shields.io/badge/skills-30-0b3d91)](#-the-full-command-surface)
 [![Agents](https://img.shields.io/badge/specialist%20agents-19-0b3d91)](#-architecture)
 [![Stress test](https://img.shields.io/badge/adversarial%20assertions-68%2F68-2e7d32)](#-verification--qa)
+[![Report contract](https://img.shields.io/badge/report%20contract-14%20sections%2C%20machine--enforced-0b3d91)](#7--the-report-depth-contract)
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776ab)](#-install)
 [![Built on](https://img.shields.io/badge/built%20on-claude--seo%20v2.0.0-6b6b85)](NOTICE)
 
@@ -38,6 +40,7 @@ Every Pro feature is a countermeasure born from that incident and the rebuilt au
   - [Slack connector](#6--slack-connector-seo-connect)
   - [The report depth contract](#7--the-report-depth-contract)
   - [Upstream sync](#8--upstream-sync-never-a-stale-fork)
+  - [Quality & release engineering](#9--quality--release-engineering-new-in-110)
 - [Install](#-install)
 - [First-run onboarding](#-first-run-onboarding)
 - [Quick start](#-quick-start)
@@ -81,7 +84,7 @@ Three principles run through all of it:
 
 ## 👥 Who this is for
 
-- **🏢 In-house SEO managers** — supercharge your workflow with Claude without standing up infrastructure: install, `/seo-setup`, audit. The [User Manual (PDF)](manual/Claude-SEO-Pro-User-Manual-v01.pdf) assumes zero coding background.
+- **🏢 In-house SEO managers** — supercharge your workflow with Claude without standing up infrastructure: install, `/seo-setup`, audit. The [User Manual (PDF)](manual/Claude-SEO-Pro-User-Manual-v02.pdf) assumes zero coding background.
 - **🏪 Agencies & consultants** — ship a repeatable, white-label-able audit system to clients one seat at a time, with credentials kept on each client's own machine and a client-grade PDF at the end of every run.
 - **🤝 Teams that answer to skeptical stakeholders** — every recommendation carries its evidence, every report carries its API call log, and pending data is disclosed instead of papered over. Built for the moment a client asks *"how do you know?"*
 
@@ -248,6 +251,10 @@ Every audit must produce a client-grade report meeting the **14-section depth co
 
 Hard rules: a section with no data access renders as **Data pending** with the unlock step (never omitted, never estimated); every number carries a source; a compressed summary-only report is a **contract violation**.
 
+**And the contract is machine-enforced** *(new in 1.1.0)*: `tools/lint_report.py` lints every generated report — **FAIL** on missing sections, leftover `{{placeholders}}`, or summary-only compression; warnings on depth-floor shortfalls. Validated against ground truth (the gold-depth report passes; a known-shallow report fails with 11 missing sections). A FAIL means the report doesn't ship.
+
+**White-label** *(new in 1.1.0)*: agencies rebrand every client report — preparer, colors, logo, footer — via `~/.config/claude-seo/branding.json` (`python onboarding/branding.py set --preparer "Your Agency" --primary "#123456"`). No template editing; neutral product defaults when unset.
+
 ---
 
 ### 8. 🔄 Upstream sync (never a stale fork)
@@ -271,9 +278,29 @@ A clean dry-run reports **exactly one** changed file — `skills/seo-audit/SKILL
 
 ---
 
+### 9. 🧪 Quality & release engineering *(new in 1.1.0)*
+
+The reliability layer that makes everything above safe to evolve:
+
+| Guard | What it catches |
+|---|---|
+| **CI regression gate** (`.github/workflows/ci.yml` + `tests/`) | Every push/PR runs the 68-assertion adversarial component suite, compiles all 99 Python files, validates every JSON, secret-scans the tree, verifies the overlay, and self-tests the report linter. Stdlib-only, offline — no keys needed in CI. |
+| **Install drift guard** (`tools/check_install.py`) | Hashes the Pro-owned surface in the repo vs what's actually installed under `~/.claude` and reports **FRESH/STALE**. Caught a real incident on first run: an audit had silently executed against stale pre-Pro skills. Installers now stamp `~/.config/claude-seo/install-manifest.json`; `/seo-setup verify` surfaces it. |
+| **Report-contract linter** (`tools/lint_report.py`) | The deterministic half of the audit-quality eval harness (see §7). The LLM-judge half ships later, once calibrated — flaky judges are worse than none. |
+| **Roadmap + refused-features list** (`docs/ROADMAP-7-to-9.md`) | The scope guardrail: explicitly refuses the hosted-dashboard/own-crawler/multi-tenant path that would destroy the local-first differentiation. |
+
+---
+
 ## 📦 Install
 
 **Requirements:** [Claude Code CLI](https://claude.ai/claude-code) · Python 3.10+ · Node.js (only for the DataForSEO/Firecrawl/Exa MCP servers) · your own API accounts for whichever providers you enable (all optional).
+
+**Plugin marketplace (Claude Code 1.0.33+) — fastest:**
+```bash
+/plugin marketplace add creator-imran/claude-seo-pro
+/plugin install claude-seo-pro@creator-imran-claude-seo-pro
+```
+*(The repo is private — requires `gh auth login` with access. No access, or want the engines + drift guard too? Use the installer path below.)*
 
 **Windows (PowerShell):**
 ```powershell
@@ -453,14 +480,15 @@ What was actually tested before v1.0.0 (we practice the evidence rule on ourselv
 
 | Check | Result |
 |---|---|
-| Adversarial stress harness (secret/transient injection, forged/stale HMAC signatures, unauthorized users, router fallbacks/overrides, cache expiry, fact-supersede) | **68/68 pass** |
-| Inventory QA — 30 skills, 19 agents, 51 scripts, 8 extensions, all JSON, doc links | **6/6 batches pass** |
-| Compile every `.py` (ours + vendored upstream) | **94 files, 0 failures** |
-| Whole-repo secret scan + tracked-files scan | **clean** |
+| Adversarial component suite (secret/transient injection, forged/stale HMAC signatures, unauthorized users, router fallbacks/overrides, cache expiry, fact-supersede) — **now in CI on every push** | **68/68 pass** |
+| Repo integrity (compile-all 99 `.py` · JSON validity · secret-scan · no client data) — **in CI** | **OK / clean** |
+| Inventory QA — 30 skills, 19 agents, 51 scripts, 8 extensions, doc links | **6/6 batches pass** |
+| Report-linter ground-truth matrix (gold report / shallow report / raw template) | **PASS / FAIL / FAIL — exactly as designed** |
+| Install drift (repo ↔ `~/.claude`) | **FRESH** |
 | Provenance (sync dry-run vs upstream v2.0.0) | **exactly 1 file differs — the managed overlay** |
 | **Live production runs** | full 4-phase audit on a real US business; live-data audit on a real Dubai business (28 DataForSEO calls, $0.61) — both delivered client PDFs |
 
-Bugs found *by* this QA and fixed before release: a deprecated-`utcnow()` time bug, a silent model-router override failure, a pending-marker keying collision, and a misleading signature-test artifact. The details are in [`docs/WHATS-DIFFERENT.md`](docs/WHATS-DIFFERENT.md) — we'd rather show the bugs we caught than pretend there were none.
+Bugs found *by* this QA and fixed before release: a deprecated-`utcnow()` time bug, a silent model-router override failure, a pending-marker keying collision, a misleading signature-test artifact, a **dead-endpoint preflight in the keyword orchestrator** that aborted every live run (caught by Phase-1 validation, fixed and live-verified), and a **stale-install incident** where audits ran against outdated skills (now detectable by the drift guard). The details are in [`docs/WHATS-DIFFERENT.md`](docs/WHATS-DIFFERENT.md) — we'd rather show the bugs we caught than pretend there were none.
 
 ---
 
@@ -477,8 +505,9 @@ Bugs found *by* this QA and fixed before release: a deprecated-`utcnow()` time b
 
 | Doc | What it covers |
 |---|---|
-| **[User Manual (PDF, v01)](manual/Claude-SEO-Pro-User-Manual-v01.pdf)** | The complete hand-holding guide — onboarding, every command, the pipeline, reading reports, troubleshooting. **Start here.** |
-| [VERSION.md](VERSION.md) · [system-version.json](system-version.json) | What came from upstream vs what Pro adds — the full provenance ledger |
+| **[User Manual (v02 — HTML interactive / PDF)](manual/Claude-SEO-Pro-User-Manual-v02.html)** ([PDF](manual/Claude-SEO-Pro-User-Manual-v02.pdf)) | The exhaustive operator guide — every command with examples and expected output, all 7 provider onboardings step-by-step, the full audit walkthrough, report reading, white-labeling, troubleshooting encyclopedia, FAQ, glossary. **Start here.** |
+| [VERSION.md](VERSION.md) · [system-version.json](system-version.json) | What came from upstream vs what Pro adds — the full provenance ledger + version history |
+| [docs/ROADMAP-7-to-9.md](docs/ROADMAP-7-to-9.md) | The phased improvement plan + the refused-features guardrail |
 | [docs/ONBOARDING.md](docs/ONBOARDING.md) | Per-provider setup, attach-later, rotation |
 | [docs/SECURITY.md](docs/SECURITY.md) | Threat model, key storage, removal |
 | [docs/CONNECTOR.md](docs/CONNECTOR.md) | Slack connector deployment guide |
@@ -511,7 +540,7 @@ Typically $0.10–$3 depending on market count and keyword depth. A real example
 <details>
 <summary><b>Can a non-technical SEO manager run this?</b></summary>
 
-That's the design target. The <a href="manual/Claude-SEO-Pro-User-Manual-v01.pdf">User Manual</a> assumes no coding background; onboarding is conversational (<code>/seo-setup</code>); and the Slack connector removes the terminal entirely for day-to-day audit requests.
+That's the design target. The <a href="manual/Claude-SEO-Pro-User-Manual-v02.pdf">User Manual</a> assumes no coding background; onboarding is conversational (<code>/seo-setup</code>); and the Slack connector removes the terminal entirely for day-to-day audit requests.
 </details>
 
 <details>

@@ -1,26 +1,36 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "agricidaniel-claude-seo",
+  "name": "creator-imran-claude-seo-pro",
   "owner": {
-    "name": "AgriciDaniel"
+    "name": "creator-imran",
+    "url": "https://github.com/creator-imran"
   },
   "metadata": {
-    "description": "Comprehensive SEO analysis plugin for Claude Code. 25 sub-skills and 18 sub-agents, plus 7 optional MCP extensions (DataForSEO, Firecrawl, Banana, Ahrefs, SE Ranking, Profound, Bing Webmaster, Unlighthouse). v2 adds shared headless rendering, QRG-aligned content quality gates, LCP subparts via CrUX, IndexNow, four Schema.org generators, AI Share-of-Voice tracking, parasite-SEO risk scanning, multi-platform portability, and a hardened SSRF + DNS-rebinding safety layer."
+    "description": "Claude SEO Pro - the evidence-verified SEO command center for Claude Code. A hardened, client-ready distribution of the MIT-licensed claude-seo system (all 25 upstream sub-skills + 18 agents preserved) plus a Pro layer: guided API onboarding with secure credential storage, an anti-fabrication Evidence Integrity Protocol, a 4-phase audit pipeline with built-in multi-locale keyword research, persistent per-client knowledge store with a learning agent, dispatch-time model-cost routing, a Slack connector, white-label client reports under a mandatory 14-section depth contract, and CI-gated releases."
   },
   "plugins": [
     {
-      "name": "claude-seo",
+      "name": "claude-seo-pro",
       "source": "./",
-      "description": "Comprehensive SEO analysis plugin for Claude Code. 25 sub-skills (21 core + 1 orchestrator + 1 framework integration + 2 extension mirrors) and 18 sub-agents (15 core + 1 framework integration + 2 extension mirrors), plus 7 optional MCP extensions. v2 adds shared headless rendering across every fetching agent, QRG-aligned content quality gates, LCP subparts via CrUX, IndexNow submission, four Schema.org generators (Reservation / OrderAction / DiscussionForumPosting / ProfilePage), AI Share-of-Voice tracking, parasite-SEO risk scanning, and multi-platform portability.",
+      "description": "Evidence-verified SEO command center: 30 skills (25 upstream + 5 Pro) and 19 specialist agents. Pro layer adds /seo-setup guided onboarding (DataForSEO, Google PSI/CrUX/GSC/GA4, GBP, Firecrawl, Exa, Slack - live-validated, owner-only storage), the Evidence Integrity Protocol (every finding cites file:line or an API field; missing data reports as 'Data pending', never estimated), a 4-phase audit (business intelligence -> evidence audit -> keyword research -> local/GBP), /seo-knowledge persistent client memory + /seo-learn learning agent, /seo-models cost routing (Haiku extraction / Sonnet reasoning / Opus synthesis), /seo-connect Slack bridge, and white-label PDF reports meeting a 14-section depth contract.",
       "author": {
-        "name": "AgriciDaniel",
-        "email": "agricidaniel@gmail.com",
-        "url": "https://github.com/AgriciDaniel"
+        "name": "Imran Shaikh",
+        "url": "https://github.com/creator-imran"
       },
       "category": "marketing",
-      "homepage": "https://claude-seo.md",
+      "homepage": "https://github.com/creator-imran/claude-seo-pro",
       "keywords": [
         "seo",
+        "seo-audit",
+        "evidence-integrity",
+        "guided-onboarding",
+        "secure-credentials",
+        "client-reports",
+        "white-label",
+        "keyword-research",
+        "client-knowledge-store",
+        "model-routing",
+        "slack-connector",
         "technical-seo",
         "content-quality",
         "e-e-a-t",
@@ -29,34 +39,15 @@
         "local-seo",
         "geo",
         "ai-search",
-        "sitemap",
-        "image-optimization",
-        "image-serp",
-        "google-images",
-        "hreflang",
+        "dataforseo",
         "google-search-console",
         "pagespeed",
         "crux",
         "ga4",
-        "backlinks",
-        "moz",
-        "bing-webmaster",
-        "common-crawl",
-        "backlink-verification",
-        "semantic-clustering",
-        "topic-clusters",
-        "sxo",
-        "search-experience",
-        "drift-monitoring",
-        "ecommerce-seo",
-        "google-shopping",
-        "cultural-profiles",
-        "content-parity",
+        "firecrawl",
+        "exa",
         "mcp-extensions",
-        "headless-rendering",
-        "ssrf-safe-fetchers",
-        "ai-citation-optimization",
-        "synthesis-framework"
+        "agency-tooling"
       ]
     }
   ]

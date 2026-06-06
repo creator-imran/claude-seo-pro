@@ -131,5 +131,8 @@ compress them into the exec summary):
    `scripts/google_report.py` is an alternative when its deps are installed.
 3. Name it `<domain>-seo-audit-<YYYY-MM>.pdf`, place it where the user will find it,
    and state the path in your summary.
-4. Self-check before delivering: walk sections 1–14 against this contract; a missed
-   section or a sourceless number is a defect, not a style choice.
+4. Self-check before delivering — run the deterministic contract linter:
+   `python tools/lint_report.py <report>.html` (from the repo) — it FAILS on missing
+   sections, leftover `{{PLACEHOLDERS}}`, and summary-only compression, and warns on
+   depth-floor shortfalls. **A FAIL means the report must not be delivered.** Then walk
+   the content itself: a sourceless number is a defect, not a style choice.

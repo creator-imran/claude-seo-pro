@@ -75,7 +75,7 @@ OVERLAY_PROTECTED = [
     "install.ps1",
     "install.sh",
     "publish-to-github.ps1",
-    ".claude-plugin/plugin.json",
+    ".claude-plugin/",
     "upstream.json",
     "VERSION.md",
     "system-version.json",

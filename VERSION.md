@@ -1,6 +1,6 @@
 # Claude SEO Pro — System Version & Provenance
 
-**Product:** Claude SEO Pro · **Version:** `1.0.0` (unreleased) · **Date:** 2026-06-06
+**Product:** Claude SEO Pro · **Version:** `1.1.0` · **Date:** 2026-06-06
 **Maintainer:** [creator-imran](https://github.com/creator-imran)
 **Built on (upstream):** [`AgricIDaniel/claude-seo`](https://github.com/AgricIDaniel/claude-seo) `@ v2.0.0` · MIT
 
@@ -14,7 +14,7 @@ This file is the single source of truth for **what came from the source repo** v
 
 ## At a glance
 
-| | Source (upstream `claude-seo` v2.0.0) | Claude SEO Pro 1.0.0 (now) |
+| | Source (upstream `claude-seo` v2.0.0) | Claude SEO Pro 1.1.0 (now) |
 |---|---|---|
 | SEO sub-skills | 25 | 25 upstream **+ 5 added** = 30 |
 | Specialist agents | 18 | 18 upstream **+ 1 added** = 19 |
@@ -23,6 +23,11 @@ This file is the single source of truth for **what came from the source repo** v
 | Persistent client memory | none | **yes** (knowledge store + data cache) |
 | Model-cost routing | implicit | **yes** (dispatch-time policy) |
 | Chat (Slack) interface | none | **yes** (headless connector) |
+| Report depth contract + linter | n/a | **yes** (14 sections, machine-enforced) |
+| White-label client reports | n/a | **yes** (`branding.json`) |
+| CI regression gate | upstream's own | **yes, for the Pro layer** (push/PR) |
+| Install drift detection | none | **yes** (`check_install.py` + manifest stamp) |
+| Plugin-marketplace install | upstream's identity | **yes, rebranded** (one-command) |
 | Upstream-sync mechanism | n/a | **yes** (overlay + PR workflow) |
 | License | MIT | MIT (attribution in [`NOTICE`](NOTICE)) |
 
@@ -128,23 +133,50 @@ All additions are **owned files** (protected from upstream sync via
 
 ### 3.8 Distribution, docs & install
 - `README.md` (rewritten), `CLAUDE.md` (topology), `NOTICE` (MIT attribution),
-  `.claude-plugin/plugin.json` (rebranded), self-contained `install.ps1`/`install.sh`,
+  `.claude-plugin/plugin.json` + `marketplace.json` (rebranded for one-command
+  `/plugin marketplace add creator-imran/claude-seo-pro`), self-contained
+  `install.ps1`/`install.sh` (now stamping `install-manifest.json`),
   `publish-to-github.ps1` (with staged-secret guard), `docs/` (ONBOARDING, SECURITY,
-  WHATS-DIFFERENT, PUBLISH, CONNECTOR), `manual/Claude-SEO-Pro-User-Manual-v01.{html,pdf}`.
+  WHATS-DIFFERENT, PUBLISH, CONNECTOR, ROADMAP-7-to-9),
+  `manual/Claude-SEO-Pro-User-Manual-v02.{html,pdf}` (v02 supersedes v01).
+
+### 3.9 Quality & release engineering — NEW in 1.1.0
+- **CI regression gate** — `.github/workflows/ci.yml` + `tests/test_owned_components.py`
+  (the 68-assertion adversarial suite, in-repo) + `tests/test_repo_integrity.py`
+  (compile-all · JSON validity · secret-scan · no-client-data) + overlay check +
+  report-linter self-test. Runs on every push/PR; stdlib-only, offline. Status: ✅.
+- **Install drift guard** — `tools/check_install.py` hashes the Pro-owned surface (repo
+  vs `~/.claude`) and reports FRESH/STALE; installers stamp
+  `~/.config/claude-seo/install-manifest.json`; wired into `/seo-setup verify`.
+  Status: ✅ (caught a real stale-install incident on first run).
+- **Report-contract linter** — `tools/lint_report.py`: deterministic enforcement of the
+  14-section depth contract (FAIL on missing sections / leftover placeholders /
+  summary-only compression; WARN on depth floors). Validated against ground truth:
+  gold-depth report PASSes, the known-shallow report FAILs, raw template FAILs.
+  Mandatory pre-delivery step. Status: ✅. (LLM-judge half deferred until calibrated.)
+- **White-label branding** — `onboarding/branding.py` + `~/.config/claude-seo/branding.json`:
+  agency rebrand of client reports (preparer, colors, logo, footer) with neutral
+  defaults; report generation loads it as step 0. Status: ✅.
+- **Roadmap & scope guardrail** — `docs/ROADMAP-7-to-9.md`: phased plan with an explicit
+  refused-features list (no SaaS dashboard / own crawler / multi-tenant / SLAs).
+- **Fix:** `scripts/keyword_research.py` preflight probed a non-existent endpoint
+  (aborted every live run as "data pending"); replaced with a real minimal Labs probe,
+  live-verified. The fan-out *execution* remains Phase-2 work (honest stub).
 
 ---
 
-## 4. Verification status (pre-push QA)
+## 4. Verification status
 
 | Check | Result |
 |---|---|
-| Adversarial stress test (`stress_test_csp.py`) | **68/68 pass** |
-| Compile all Python (ours + vendored) | **0 failures** (94 files) |
-| Whole-repo real-secret scan | **clean** |
-| Secret/client-data files in repo | **none** |
+| Adversarial component suite (`tests/test_owned_components.py`, in CI) | **68/68 pass** |
+| Repo integrity (`tests/test_repo_integrity.py`, in CI) | **OK** — 99 .py compile, 8 JSON valid, secret-scan clean, no client data |
 | Overlay integrity (idempotent) | **4/4 present** |
-| Owned components present | **45/45** · 30 skills · 19 agents |
-| **Pending (environmental / external):** | live keyword fan-out (DataForSEO IP whitelist), GSC/GA4/GBP OAuth flows, Slack live e2e, `sync_upstream --dry-run` (was network-blocked) |
+| Report-linter ground-truth matrix | **correct** (gold PASS / shallow FAIL / template FAIL) |
+| Install drift | **FRESH** (repo ↔ `~/.claude` match) |
+| Provenance (`sync_upstream.py --dry-run`) | **clean** — only the managed overlay differs |
+| Live production runs | full 4-phase audit (US client) + live-data audit (Dubai client, 28 API calls $0.61) |
+| **Pending (external):** | live keyword fan-out execution (Phase 2), GSC/GA4/GBP OAuth browser flows, Slack live e2e (operator deploy steps) |
 
 ---
 
@@ -152,7 +184,8 @@ All additions are **owned files** (protected from upstream sync via
 
 | Version | Date | Summary |
 |---|---|---|
-| `1.0.0` (unreleased) | 2026-06-06 | Initial Pro distribution: vendored `claude-seo v2.0.0` + Evidence Integrity overlay + guided onboarding + 4-phase audit (BI, keyword research, local/GBP) + Feature 1 (knowledge store/cache) + Feature 2 (learning agent) + Feature 3 (model routing) + Feature 4 (Slack connector) + upstream-sync + User Manual v01. Not yet pushed (no git/gh on build machine). Feature 5 (skills-enhancer) deferred. |
+| `1.1.0` | 2026-06-06 | **Hardening + quality release (Phase 1 + risk-free Phase 2).** Added: CI regression gate (`tests/` + `ci.yml`); install drift guard (`tools/check_install.py` + installer manifest stamp, wired into `/seo-setup verify`); white-label branding (`onboarding/branding.py` + report-template tokens); deterministic report-contract linter (`tools/lint_report.py`, mandatory pre-delivery, CI self-tested); plugin-marketplace distribution (rebranded `.claude-plugin/marketplace.json`, README one-command install); roadmap + refused-features guardrail (`docs/ROADMAP-7-to-9.md`); report depth contract (14 sections, extracted from the gold-standard client report) with HTML skeleton. Fixed: `keyword_research.py` dead-endpoint preflight (live-verified); `utcnow()` deprecations; stale-install incident (drift guard caught it). User Manual **v02** (exhaustive rewrite; supersedes v01). |
+| `1.0.0` | 2026-06-06 | Initial Pro distribution (tag `v1.0.0`): vendored `claude-seo v2.0.0` + Evidence Integrity overlay + guided onboarding (7 providers) + 4-phase audit (BI, keyword research, local/GBP) + knowledge store/cache + learning agent + model routing + Slack connector + upstream-sync + User Manual v01. Verified by 68/68 adversarial assertions and two live client audits. Feature 5 (skills-enhancer) deferred by design. |
 
 > **How to re-verify provenance** ("is this still upstream + our overlay only?"):
 > run `python tools/sync_upstream.py --dry-run` — a clean run reports **only**
