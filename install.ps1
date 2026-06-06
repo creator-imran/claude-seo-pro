@@ -109,6 +109,15 @@ if (Test-Path "$RepoRoot\extensions") {
     }
 }
 
+# --- Install manifest (version stamp for drift detection) ---
+$ver = "unknown"
+try { $ver = (Get-Content "$RepoRoot\system-version.json" -Raw | ConvertFrom-Json).version } catch {}
+$cfgDir = "$env:USERPROFILE\.config\claude-seo"
+New-Item -ItemType Directory -Force -Path $cfgDir | Out-Null
+$manifest = @{ pro_version = $ver; installed_utc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"); source = $RepoRoot } | ConvertTo-Json
+Set-Content -Path "$cfgDir\install-manifest.json" -Value $manifest -Encoding utf8
+Write-Host "=> Stamped install manifest (v$ver)" -ForegroundColor Yellow
+
 # --- Python dependencies (onboarding itself is stdlib-only; reports need these) ---
 $reqFile = "$RepoRoot\requirements.txt"
 if (Test-Path $reqFile) {

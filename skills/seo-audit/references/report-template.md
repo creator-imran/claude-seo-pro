@@ -116,6 +116,12 @@ compress them into the exec summary):
 
 ## Generation
 
+0. **Load white-label branding first:** run `python onboarding/branding.py show` (or read
+   `~/.config/claude-seo/branding.json`). Substitute the cover/footer/preparer and the three
+   CSS color tokens (`--brand`, `--brand2`, `--accent`) with the returned values. If no
+   branding.json exists, the template's defaults ARE the neutral product branding — leave
+   them. This is what lets an agency resell reports under its own brand without editing the
+   template.
 1. Copy `assets/report-template.html` to the audit output dir; replace every
    `{{PLACEHOLDER}}`; delete comment blocks of inapplicable conditional sections
    (e.g. Local/GBP for non-local businesses — replace with the one-line skip note).

@@ -36,7 +36,13 @@ rotating it after setup.
 2. Parse the JSON. Report, per provider: configured? permissions OK? MCP registered?
 3. For any provider that is configured, optionally confirm live connectivity by
    noting the `--check` does not re-validate; offer to run a validation pass.
-4. Summarize what is ready and what is missing. Recommend next action.
+4. **Install freshness:** if run from a repo checkout, also run
+   `python tools/check_install.py` — it flags when the installed `~/.claude` skills are
+   STALE vs the repo (a real failure mode: an audit once ran on old skills because the
+   installer wasn't re-run after an update). If it reports `[INSTALL STALE]`, tell the
+   user to re-run `install.ps1` / `install.sh` before auditing. (If there's no repo
+   checkout to compare against, skip this step.)
+5. Summarize what is ready and what is missing. Recommend next action.
 
 ### `setup` — full guided onboarding
 Walk the providers in this order. For EACH one:

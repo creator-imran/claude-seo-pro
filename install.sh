@@ -94,6 +94,13 @@ main() {
     done
   fi
 
+  # --- Install manifest (version stamp for drift detection) ---
+  VER="$("$PY" -c "import json;print(json.load(open('$REPO_ROOT/system-version.json')).get('version','unknown'))" 2>/dev/null || echo unknown)"
+  mkdir -p "$HOME/.config/claude-seo"
+  printf '{\n  "pro_version": "%s",\n  "installed_utc": "%s",\n  "source": "%s"\n}\n' \
+    "$VER" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$REPO_ROOT" > "$HOME/.config/claude-seo/install-manifest.json"
+  echo "=> Stamped install manifest (v$VER)"
+
   if [ -f "$REPO_ROOT/requirements.txt" ]; then
     echo "=> Installing Python dependencies..."
     cp -f "$REPO_ROOT/requirements.txt" "$SKILL_DIR/requirements.txt"

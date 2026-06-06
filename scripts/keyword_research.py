@@ -193,14 +193,25 @@ def build_plan(seeds, markets, target) -> dict:
 # ---------- live execution (skeleton; honest about IP-block) ----------
 
 def preflight(creds) -> dict:
-    """Cheap auth + whitelist probe before spending on the suite."""
-    resp = _post("/appendix/user_data", [{}], creds) if False else None
-    # user_data is GET-style; use a tiny labs call to detect 40207 cheaply via task status.
-    probe = _post("/dataforseo_labs/google/available_filters/live", [{}], creds)
+    """Cheap auth + whitelist probe before spending on the suite.
+
+    Uses a real, minimal Labs call (1 keyword, US) so that:
+      - bad credentials surface as a top-level non-20000 status,
+      - an un-whitelisted IP surfaces as TASK-level 40207 (the common DataForSEO trap),
+      - a whitelisted, authed account returns task 20000.
+    Costs ~$0.01 — far cheaper than discovering the block mid-suite.
+    """
+    probe = _post("/dataforseo_labs/google/bulk_keyword_difficulty/live",
+                  [{"keywords": ["seo"], "location_code": 2840, "language_code": "en"}], creds)
+    if not isinstance(probe, dict) or "_http_error" in probe or "_network_error" in probe:
+        return {"ok": False, "reason": "auth_or_other", "message": str(probe)[:200]}
+    if probe.get("status_code") != 20000:
+        return {"ok": False, "reason": "auth_or_other",
+                "message": probe.get("status_message", "non-20000 top-level status")}
     code, msg = _task_status(probe)
     if code == 40207:
         return {"ok": False, "reason": "ip_not_whitelisted", "message": msg}
-    if code in (20000, None) and isinstance(probe, dict) and probe.get("status_code") == 20000:
+    if code == 20000:
         return {"ok": True}
     return {"ok": False, "reason": "auth_or_other", "message": msg or str(probe)[:200]}
 

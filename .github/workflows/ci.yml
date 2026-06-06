@@ -1,0 +1,37 @@
+name: CI
+
+# Regression gate for Claude SEO Pro's owned code. Runs on every push and PR.
+# All checks are stdlib-only (no pip install) and offline — no API keys, no network.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Adversarial component tests (knowledge / routing / connector / onboarding)
+        run: python tests/test_owned_components.py
+
+      - name: Repo integrity (compile-all · JSON · secret-scan · no client-data)
+        run: python tests/test_repo_integrity.py
+
+      - name: Overlay integrity (Evidence Integrity Protocol + fetch-path patch present)
+        run: python tools/apply_overlay.py --check
+
+      - name: Provenance — fork is upstream + overlay only (dry-run)
+        run: python tools/sync_upstream.py --dry-run
+        continue-on-error: true   # network-dependent (downloads upstream); informational

@@ -54,6 +54,8 @@ OVERLAY_PROTECTED = [
     # New owned files that live inside upstream-owned dirs (protect by exact path):
     "agents/seo-learn.md",
     "scripts/keyword_research.py",
+    "tests/test_owned_components.py",
+    "tests/test_repo_integrity.py",
     "skills/seo-audit/references/business-intelligence.md",
     "skills/seo-audit/references/audit-playbook.md",
     "skills/seo-audit/references/keyword-research.md",
@@ -64,6 +66,7 @@ OVERLAY_PROTECTED = [
     "docs/SECURITY.md",
     "docs/WHATS-DIFFERENT.md",
     "docs/PUBLISH.md",
+    "docs/ROADMAP-7-to-9.md",
     "README.md",
     "NOTICE",
     "CHANGELOG.md",

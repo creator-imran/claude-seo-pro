@@ -3,7 +3,13 @@
      Extracted from the Strokes Exhibits v2+v3 gold-standard report (June 2026).
      CONTRACT: skills/seo-audit/references/report-template.md — every section below is
      REQUIRED (or rendered "Data pending" with cause+unlock). Replace {{PLACEHOLDERS}},
-     duplicate row/card elements as needed, delete instruction comments before PDF. -->
+     duplicate row/card elements as needed, delete instruction comments before PDF.
+
+     WHITE-LABEL: before generating, load branding —
+       python onboarding/branding.py show   (or read ~/.config/claude-seo/branding.json)
+     and substitute the 3 color tokens below plus {{PREPARER}}, {{LOGO}}, {{FOOTER}},
+     {{BRAND_NAME}}. With no branding.json the defaults here ARE the neutral product
+     branding — leave them as-is. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,6 +18,7 @@
 <style>
   :root{
     --ink:#1a1a2e; --muted:#5a5a72; --line:#e3e3ee; --bg:#ffffff;
+    /* white-label color tokens — replace from branding.json, or keep these defaults */
     --brand:#0b3d91; --brand2:#1466d6; --accent:#c8102e;
     --crit:#c8102e; --high:#e8650f; --med:#caa300; --low:#5a8f3c; --ok:#2e7d32; --pend:#6b6b85;
   }
