@@ -46,7 +46,7 @@ def norm_hash(path):
 def pairs():
     out = []
     # skill dirs install to ~/.claude/skills/<name>/
-    for name in ("seo-setup", "seo-knowledge", "seo-learn", "seo-models", "seo-connect"):
+    for name in ("seo-setup", "seo-knowledge", "seo-learn", "seo-models", "seo-connect", "seo-provider"):
         out.append((f"skills/{name}/SKILL.md", os.path.join(SKILLS_ROOT, name, "SKILL.md")))
     # the patched audit skill + its Pro references/assets
     out.append(("skills/seo-audit/SKILL.md", os.path.join(SKILLS_ROOT, "seo-audit", "SKILL.md")))
@@ -70,6 +70,8 @@ def pairs():
         for f in files:
             out.append((f"{pkg}/{f}", os.path.join(SEO_SKILL, pkg, f)))
     out.append(("scripts/keyword_research.py", os.path.join(SEO_SKILL, "scripts", "keyword_research.py")))
+    # switcher installs from tools/ into the seo skill's scripts dir
+    out.append(("tools/switch_provider.py", os.path.join(SEO_SKILL, "scripts", "switch_provider.py")))
     return out
 
 def repo_version():

@@ -6,7 +6,7 @@
 
 [![CI](https://github.com/creator-imran/claude-seo-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/creator-imran/claude-seo-pro/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue)](VERSION.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](VERSION.md)
 [![Skills](https://img.shields.io/badge/skills-30-0b3d91)](#-the-full-command-surface)
 [![Agents](https://img.shields.io/badge/specialist%20agents-19-0b3d91)](#-architecture)
 [![Stress test](https://img.shields.io/badge/adversarial%20assertions-68%2F68-2e7d32)](#-verification--qa)
@@ -41,6 +41,7 @@ Every Pro feature is a countermeasure born from that incident and the rebuilt au
   - [The report depth contract](#7--the-report-depth-contract)
   - [Upstream sync](#8--upstream-sync-never-a-stale-fork)
   - [Quality & release engineering](#9--quality--release-engineering-new-in-110)
+  - [Claude ↔ OpenRouter switching](#10--claude--openrouter-switching-new-in-120)
 - [Install](#-install)
 - [First-run onboarding](#-first-run-onboarding)
 - [Quick start](#-quick-start)
@@ -117,6 +118,7 @@ A wizard that collects, **live-validates**, securely stores, and wires up every 
 | **Firecrawl** | Full-site crawling + JS rendering for SPA/large sites | Credit-balance check |
 | **Exa** | Neural web search for competitor/entity research | Single 1-result probe |
 | **Slack** | The chat connector (below) | `auth.test` + signing-secret format check |
+| **OpenRouter** *(new in 1.2.0)* | The fallback model backend — switch when Claude credits run out, or run other frontier models (see §10) | Free `/v1/key` probe — **also shows remaining credit**. **Skippable — "attach later"** like the OAuth providers |
 
 ```bash
 /seo-setup            # guided, conversational — Claude never sees your raw keys
@@ -291,6 +293,28 @@ The reliability layer that makes everything above safe to evolve:
 
 ---
 
+### 10. 🔁 Claude ↔ OpenRouter switching *(new in 1.2.0)*
+
+The system always runs on Claude Code — but the **model backend** is switchable. Out of Claude credits mid-engagement? Keep working in ~60 seconds:
+
+```bash
+# Switch to OpenRouter (default profile = the SAME Claude models, billed via OpenRouter):
+python ~/.claude/skills/seo/scripts/switch_provider.py use openrouter
+# then, in Claude Code:  /logout  →  exit  →  claude        (endpoint is read once at startup)
+
+# Switch back to Claude credits:
+python ~/.claude/skills/seo/scripts/switch_provider.py use anthropic
+# then: restart Claude Code  →  /login
+```
+
+- **Onboarded like everything else:** the OpenRouter key is collected in `/seo-setup` (masked, validated via the free key-info endpoint, shows remaining credit) — and is **fully skippable / attach-later**.
+- **Any frontier model, with guardrails:** `set-models --opus <slug> --sonnet <slug> --haiku <slug>` then `use openrouter --profile custom`. Every slug is **validated live** against OpenRouter before anything is written. Recommended: frontier-grade only (Kimi K2.6 class) — Claude Code and the Evidence Integrity Protocol are optimized for Anthropic models, and the `/seo-provider` skill says so honestly.
+- **Safety:** the switcher validates the key *and* the model map live **before** touching `~/.claude/settings.json`, keeps timestamped backups (+ `restore`), merges exactly 7 env keys and nothing else, and refuses to overwrite a foreign gateway without `--force`.
+- **Transparency:** every audit report's Data Integrity section states the model backend that produced it.
+- `status` shows the active backend, model map, key health and remaining OpenRouter credit. Conversational: **`/seo-provider`**.
+
+---
+
 ## 📦 Install
 
 **Requirements:** [Claude Code CLI](https://claude.ai/claude-code) · Python 3.10+ · Node.js (only for the DataForSEO/Firecrawl/Exa MCP servers) · your own API accounts for whichever providers you enable (all optional).
@@ -358,6 +382,7 @@ claude
 | `/seo-learn <domain>` | Run a client-learning pass manually |
 | `/seo-models` | Inspect / override the model-routing policy |
 | `/seo-connect` | Set up & operate the Slack connector |
+| `/seo-provider` | Switch model backend: Claude credits ↔ OpenRouter (status · use · set-models) |
 
 <details>
 <summary><b>All 27 upstream commands (click to expand)</b></summary>

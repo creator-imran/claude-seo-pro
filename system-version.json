@@ -1,6 +1,6 @@
 {
   "product": "claude-seo-pro",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "released": true,
   "date": "2026-06-06",
   "maintainer": "creator-imran",
@@ -11,70 +11,228 @@
     "tag": "v2.0.0",
     "license": "MIT",
     "relationship": "self-contained vendored fork (content-identical except the managed overlay)",
-    "dropped_files": ["CODEOWNERS", "CITATION.cff", ".devcontainer/"]
+    "dropped_files": [
+      "CODEOWNERS",
+      "CITATION.cff",
+      ".devcontainer/"
+    ]
   },
   "baseline_from_upstream": {
     "sub_skills": 25,
     "agents": 18,
     "scripts": "Google APIs, backlinks, drift, schema, render/fetch/parse, etc.",
-    "also": ["schema/", "hooks/", "pdf/", "references/", "extensions/", "tests/", "assets/"]
+    "also": [
+      "schema/",
+      "hooks/",
+      "pdf/",
+      "references/",
+      "extensions/",
+      "tests/",
+      "assets/"
+    ]
   },
   "in_place_modifications": [
     {
       "file": "skills/seo-audit/SKILL.md",
       "managed_by": "tools/apply_overlay.py",
-      "changes": ["pro-workflow", "fetch-path", "evidence-protocol", "error-rows"],
+      "changes": [
+        "pro-workflow",
+        "fetch-path",
+        "evidence-protocol",
+        "error-rows"
+      ],
       "status": "present"
     }
   ],
   "added": [
-    {"feature": "onboarding", "status": "verified", "since": "1.0.0",
-     "paths": ["onboarding/", "skills/seo-setup/"],
-     "providers": ["dataforseo", "google-api", "google-oauth", "gbp", "firecrawl", "exa", "slack"],
-     "pending": ["GSC/GA4/GBP OAuth browser flows need real credentials"]},
-    {"feature": "audit-pipeline-4-phase", "status": "verified-live", "since": "1.0.0",
-     "paths": ["skills/seo-audit/references/business-intelligence.md",
-               "skills/seo-audit/references/audit-playbook.md",
-               "skills/seo-audit/references/keyword-research.md",
-               "skills/seo-audit/references/local-gbp-audit.md",
-               "scripts/keyword_research.py"],
-     "pending": ["live keyword fan-out EXECUTION (preflight fixed+verified in 1.1.0; merge stages are Phase-2)"]},
-    {"feature": "report-depth-contract", "status": "verified", "since": "1.0.0",
-     "paths": ["skills/seo-audit/references/report-template.md", "skills/seo-audit/assets/report-template.html"],
-     "note": "14 mandatory sections extracted from the gold-standard client report"},
-    {"feature": "F1-knowledge-store-and-cache", "status": "verified", "since": "1.0.0",
-     "paths": ["knowledge/store.py", "knowledge/cache.py", "knowledge/fsutil.py", "skills/seo-knowledge/"]},
-    {"feature": "F2-client-learning-agent", "status": "verified", "since": "1.0.0",
-     "paths": ["agents/seo-learn.md", "skills/seo-learn/", "knowledge/learn.py"]},
-    {"feature": "F3-model-routing-policy", "status": "verified", "since": "1.0.0",
-     "paths": ["routing/model_router.py", "skills/seo-models/"]},
-    {"feature": "F4-chat-connector", "status": "security-core-verified", "since": "1.0.0",
-     "paths": ["connector/", "skills/seo-connect/", "docs/CONNECTOR.md"],
-     "pending": ["live Slack app + claude -p end-to-end (operator deploy)"]},
-    {"feature": "upstream-sync", "status": "verified", "since": "1.0.0",
-     "paths": ["upstream.json", "tools/apply_overlay.py", "tools/sync_upstream.py", ".github/workflows/sync-upstream.yml"]},
-    {"feature": "ci-regression-gate", "status": "verified", "since": "1.1.0",
-     "paths": [".github/workflows/ci.yml", "tests/test_owned_components.py", "tests/test_repo_integrity.py"],
-     "note": "68-assertion adversarial suite + integrity gate + overlay check + linter self-test; push/PR"},
-    {"feature": "install-drift-guard", "status": "verified", "since": "1.1.0",
-     "paths": ["tools/check_install.py"],
-     "note": "repo-vs-installed hash comparison + installer manifest stamp; caught a real stale install"},
-    {"feature": "report-contract-linter", "status": "verified", "since": "1.1.0",
-     "paths": ["tools/lint_report.py"],
-     "note": "deterministic 14-section enforcement; ground-truth validated (gold PASS / shallow FAIL / template FAIL); LLM-judge half deferred"},
-    {"feature": "white-label-branding", "status": "verified", "since": "1.1.0",
-     "paths": ["onboarding/branding.py"],
-     "note": "agency rebrand via ~/.config/claude-seo/branding.json; neutral defaults"},
-    {"feature": "marketplace-distribution", "status": "verified", "since": "1.1.0",
-     "paths": [".claude-plugin/marketplace.json"],
-     "note": "rebranded from upstream identity; one-command /plugin install"},
-    {"feature": "roadmap-scope-guardrail", "status": "verified", "since": "1.1.0",
-     "paths": ["docs/ROADMAP-7-to-9.md"],
-     "note": "phased plan + explicit refused-features list"},
-    {"feature": "distribution-docs-manual", "status": "verified", "since": "1.0.0",
-     "paths": ["README.md", "NOTICE", ".claude-plugin/plugin.json", "install.ps1", "install.sh",
-               "publish-to-github.ps1", "docs/", "manual/Claude-SEO-Pro-User-Manual-v02.pdf"],
-     "note": "manual v02 (1.1.0) supersedes v01"}
+    {
+      "feature": "onboarding",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "onboarding/",
+        "skills/seo-setup/"
+      ],
+      "providers": [
+        "dataforseo",
+        "google-api",
+        "google-oauth",
+        "gbp",
+        "firecrawl",
+        "exa",
+        "slack",
+        "openrouter"
+      ],
+      "pending": [
+        "GSC/GA4/GBP OAuth browser flows need real credentials"
+      ]
+    },
+    {
+      "feature": "audit-pipeline-4-phase",
+      "status": "verified-live",
+      "since": "1.0.0",
+      "paths": [
+        "skills/seo-audit/references/business-intelligence.md",
+        "skills/seo-audit/references/audit-playbook.md",
+        "skills/seo-audit/references/keyword-research.md",
+        "skills/seo-audit/references/local-gbp-audit.md",
+        "scripts/keyword_research.py"
+      ],
+      "pending": [
+        "live keyword fan-out EXECUTION (preflight fixed+verified in 1.1.0; merge stages are Phase-2)"
+      ]
+    },
+    {
+      "feature": "report-depth-contract",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "skills/seo-audit/references/report-template.md",
+        "skills/seo-audit/assets/report-template.html"
+      ],
+      "note": "14 mandatory sections extracted from the gold-standard client report"
+    },
+    {
+      "feature": "F1-knowledge-store-and-cache",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "knowledge/store.py",
+        "knowledge/cache.py",
+        "knowledge/fsutil.py",
+        "skills/seo-knowledge/"
+      ]
+    },
+    {
+      "feature": "F2-client-learning-agent",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "agents/seo-learn.md",
+        "skills/seo-learn/",
+        "knowledge/learn.py"
+      ]
+    },
+    {
+      "feature": "F3-model-routing-policy",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "routing/model_router.py",
+        "skills/seo-models/"
+      ]
+    },
+    {
+      "feature": "F4-chat-connector",
+      "status": "security-core-verified",
+      "since": "1.0.0",
+      "paths": [
+        "connector/",
+        "skills/seo-connect/",
+        "docs/CONNECTOR.md"
+      ],
+      "pending": [
+        "live Slack app + claude -p end-to-end (operator deploy)"
+      ]
+    },
+    {
+      "feature": "upstream-sync",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "upstream.json",
+        "tools/apply_overlay.py",
+        "tools/sync_upstream.py",
+        ".github/workflows/sync-upstream.yml"
+      ]
+    },
+    {
+      "feature": "ci-regression-gate",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        ".github/workflows/ci.yml",
+        "tests/test_owned_components.py",
+        "tests/test_repo_integrity.py"
+      ],
+      "note": "68-assertion adversarial suite + integrity gate + overlay check + linter self-test; push/PR"
+    },
+    {
+      "feature": "install-drift-guard",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        "tools/check_install.py"
+      ],
+      "note": "repo-vs-installed hash comparison + installer manifest stamp; caught a real stale install"
+    },
+    {
+      "feature": "report-contract-linter",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        "tools/lint_report.py"
+      ],
+      "note": "deterministic 14-section enforcement; ground-truth validated (gold PASS / shallow FAIL / template FAIL); LLM-judge half deferred"
+    },
+    {
+      "feature": "white-label-branding",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        "onboarding/branding.py"
+      ],
+      "note": "agency rebrand via ~/.config/claude-seo/branding.json; neutral defaults"
+    },
+    {
+      "feature": "marketplace-distribution",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        ".claude-plugin/marketplace.json"
+      ],
+      "note": "rebranded from upstream identity; one-command /plugin install"
+    },
+    {
+      "feature": "roadmap-scope-guardrail",
+      "status": "verified",
+      "since": "1.1.0",
+      "paths": [
+        "docs/ROADMAP-7-to-9.md"
+      ],
+      "note": "phased plan + explicit refused-features list"
+    },
+    {
+      "feature": "distribution-docs-manual",
+      "status": "verified",
+      "since": "1.0.0",
+      "paths": [
+        "README.md",
+        "NOTICE",
+        ".claude-plugin/plugin.json",
+        "install.ps1",
+        "install.sh",
+        "publish-to-github.ps1",
+        "docs/",
+        "manual/Claude-SEO-Pro-User-Manual-v02.pdf"
+      ],
+      "note": "manual v02 (1.1.0) supersedes v01"
+    },
+    {
+      "feature": "provider-switching-openrouter",
+      "status": "verified-offline",
+      "since": "1.2.0",
+      "paths": [
+        "tools/switch_provider.py",
+        "skills/seo-provider/",
+        "onboarding/providers.py",
+        "onboarding/validate.py"
+      ],
+      "note": "Claude<->OpenRouter backend switch; claude profile (continuity) + custom frontier models (live slug validation); deferrable onboarding; report backend provenance; live e2e switch is an operator step",
+      "pending": [
+        "live end-to-end switch (needs funded OpenRouter key)"
+      ]
+    }
   ],
   "fixed_in_1_1_0": [
     "keyword_research.py preflight probed a non-existent endpoint (every live run aborted); replaced with a real minimal Labs probe, live-verified",
@@ -82,14 +240,34 @@
     "stale-install incident: ~/.claude was running pre-Pro skills; drift guard detects, installer re-run fixed"
   ],
   "deferred_features": [
-    {"feature": "F5-skills-enhancer", "status": "not-built", "note": "gated suggest-only via PR; user deferred"},
-    {"feature": "live-keyword-fanout-execution", "status": "phase-2", "note": "preflight verified; merge stages need live spend"},
-    {"feature": "ai-visibility-tracking", "status": "phase-2", "note": "substrate vendored (DataForSEO AI-mentions, seranking, profound)"},
-    {"feature": "scheduled-monitoring-alerting", "status": "phase-2", "note": "depends on connector live e2e"},
-    {"feature": "llm-judge-eval", "status": "phase-2", "note": "deterministic linter shipped; judge needs calibration (>=100 labeled examples)"}
+    {
+      "feature": "F5-skills-enhancer",
+      "status": "not-built",
+      "note": "gated suggest-only via PR; user deferred"
+    },
+    {
+      "feature": "live-keyword-fanout-execution",
+      "status": "phase-2",
+      "note": "preflight verified; merge stages need live spend"
+    },
+    {
+      "feature": "ai-visibility-tracking",
+      "status": "phase-2",
+      "note": "substrate vendored (DataForSEO AI-mentions, seranking, profound)"
+    },
+    {
+      "feature": "scheduled-monitoring-alerting",
+      "status": "phase-2",
+      "note": "depends on connector live e2e"
+    },
+    {
+      "feature": "llm-judge-eval",
+      "status": "phase-2",
+      "note": "deterministic linter shipped; judge needs calibration (>=100 labeled examples)"
+    }
   ],
   "verification": {
-    "component_suite": "68/68 pass (in CI)",
+    "component_suite": "93/93 pass (in CI)",
     "repo_integrity": "OK - 99 .py compile, 8 JSON valid, secret-scan clean, no client data (in CI)",
     "overlay_integrity": "4/4 present, idempotent (in CI)",
     "report_linter_ground_truth": "gold PASS / shallow FAIL / template FAIL",

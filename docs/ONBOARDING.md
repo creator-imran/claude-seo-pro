@@ -94,6 +94,21 @@ A provider is only configured if **all** its env vars are present.
 - **Get it:** https://dashboard.exa.ai/api-keys.
 - **Cost:** search is metered per request; validation uses one 1-result query.
 
+### OpenRouter (`openrouter`) — backend fallback (new in 1.2.0)
+- **Get it:** https://openrouter.ai/keys (keys start with `sk-or-`).
+- **What it unlocks:** a second model backend. When Claude credits run out, switch
+  the whole system to OpenRouter in ~60 seconds (default profile = same Claude
+  models, billed via OpenRouter) — or map custom frontier models per tier.
+- **Deferrable:** [N]ow / [L]ater / [S]kip — nothing else depends on it. Attach any
+  time with `--provider openrouter`.
+- **Validation:** OpenRouter's free key-info endpoint; shows remaining credit.
+- **Switching (the actual flip is deliberate and separate):**
+  `python ~/.claude/skills/seo/scripts/switch_provider.py use openrouter | anthropic`
+  → then `/logout`/`/login` + **restart Claude Code** (endpoint is read once at
+  startup). Full recipes: Manual §12.5; design: `docs/SPEC-provider-switching.md`.
+- **Quality note:** custom models should be frontier-grade only (Kimi K2.6 class);
+  reports disclose which backend produced them.
+
 ## After onboarding
 
 1. **Restart Claude Code** — MCP servers load only at startup.

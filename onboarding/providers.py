@@ -187,6 +187,30 @@ PROVIDERS = [
         ],
     },
     {
+        "id": "openrouter",
+        "label": "OpenRouter (alternate model backend)",
+        "kind": "secret",
+        "deferrable": True,
+        "why": ("Fallback backend when Claude credits run out, and access to other frontier "
+                "models. The whole system keeps running on Claude Code; only the model "
+                "backend switches."),
+        "signup_url": "https://openrouter.ai/keys",
+        "docs_url": "https://openrouter.ai/docs/cookbook/coding-agents/claude-code-integration",
+        "fields": [
+            {"key": "api_key", "prompt": "OpenRouter API key (starts with sk-or-)", "secret": True, "env": "OPENROUTER_API_KEY"},
+        ],
+        "mcp": None,
+        "notes": [
+            "Optional. Configure now or attach later - nothing else depends on it.",
+            "Switch backends any time:  python ~/.claude/skills/seo/scripts/switch_provider.py "
+            "use openrouter | anthropic  (then restart Claude Code - the endpoint is read once at startup).",
+            "Default switch profile keeps the SAME Claude models, billed via OpenRouter "
+            "(slight premium vs first-party) - the out-of-credits lifeline.",
+            "Custom models: frontier-grade only is recommended (e.g. Kimi K2.6 class); "
+            "see the /seo-provider skill for the curated list and quality caveats.",
+        ],
+    },
+    {
         "id": "slack",
         "label": "Slack (chat connector)",
         "kind": "secret",

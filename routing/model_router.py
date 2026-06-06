@@ -109,26 +109,49 @@ def _tier_for(agent: str | None, task: str | None, policy: dict) -> tuple:
     return DEFAULT_TIER, "default:fallback"
 
 
+PROVIDER_STATE = os.path.expanduser("~/.config/claude-seo/provider-state.json")
+
+
+def active_provider() -> str:
+    """Which backend Claude Code is pointed at (set by tools/switch_provider.py)."""
+    try:
+        with open(PROVIDER_STATE, encoding="utf-8") as fh:
+            return json.load(fh).get("provider", "anthropic")
+    except (OSError, json.JSONDecodeError):
+        return "anthropic"
+
+
 def route(agent: str | None = None, task: str | None = None) -> dict:
     """The core call the orchestrator makes per dispatch."""
     policy = load_policy()
     tier, source = _tier_for(agent, task, policy)
     spec = TIERS[tier]
     model_key = spec["model"]
-    # tier->model can be remapped per deployment
-    model_id = (policy.get("tier_models") or {}).get(tier) or MODELS[model_key]["id"]
+    provider = active_provider()
+    # OpenRouter mode: emit the ALIAS (haiku/sonnet/opus). Claude Code's
+    # ANTHROPIC_DEFAULT_*_MODEL env vars (written by switch_provider.py) resolve it
+    # to whatever the active profile mapped — full IDs would bypass that mapping.
+    if provider == "openrouter":
+        model_id = model_key
+        source += "@openrouter"
+    else:
+        # tier->model can be remapped per deployment
+        model_id = (policy.get("tier_models") or {}).get(tier) or MODELS[model_key]["id"]
     # force_model pins the MODEL on every dispatch (e.g. "everything on Opus" for a
     # flagship report) — the tier still supplies effort/rationale.
     forced = False
     fm = policy.get("force_model")
     if fm:
-        model_id = MODELS.get(fm, {}).get("id") or fm  # friendly name -> id, else assume id
+        if provider == "openrouter":
+            model_id = fm if fm in MODELS else fm  # alias or explicit slug, as given
+        else:
+            model_id = MODELS.get(fm, {}).get("id") or fm  # friendly name -> id, else assume id
         source += "+force_model"
         forced = True
     return {
         "agent": agent, "task": task, "tier": tier, "source": source,
         "model": model_id, "effort": spec["effort"], "rationale": spec["why"],
-        "forced_model": forced, "keep_main_loop_fixed": True,
+        "forced_model": forced, "provider": provider, "keep_main_loop_fixed": True,
     }
 
 
@@ -139,8 +162,12 @@ def estimate(tier: str, in_tokens: int, out_tokens: int) -> dict:
     cost = (in_tokens / 1e6) * m["in"] + (out_tokens / 1e6) * m["out"]
     opus = MODELS["opus"]
     opus_cost = (in_tokens / 1e6) * opus["in"] + (out_tokens / 1e6) * opus["out"]
-    return {"tier": tier, "model": m["id"], "usd": round(cost, 4),
-            "usd_if_opus": round(opus_cost, 4), "saved_usd": round(opus_cost - cost, 4)}
+    out = {"tier": tier, "model": m["id"], "usd": round(cost, 4),
+           "usd_if_opus": round(opus_cost, 4), "saved_usd": round(opus_cost - cost, 4)}
+    if active_provider() == "openrouter":
+        out["note"] = ("backend is OpenRouter: estimates assume Anthropic first-party pricing; "
+                       "actual cost depends on the mapped models (see openrouter.ai/models)")
+    return out
 
 
 def show() -> dict:

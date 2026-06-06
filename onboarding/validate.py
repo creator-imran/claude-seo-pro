@@ -214,6 +214,32 @@ def validate_slack(cfg: dict) -> dict:
             "warn": warn or "bot token unverified (network)"}
 
 
+def validate_openrouter(cfg: dict) -> dict:
+    """Validate the key via OpenRouter's free key-info endpoint (no token spend).
+    On success, surface remaining credit - useful signal for the fallback use case."""
+    key = (cfg.get("api_key") or "").strip()
+    if not key:
+        return {"ok": False, "detail": "api_key missing", "warn": None}
+    warn = None if key.startswith("sk-or-") else "key usually starts with 'sk-or-'"
+    status, body = _request(
+        "https://openrouter.ai/api/v1/key",
+        headers={"Authorization": f"Bearer {key}"},
+    )
+    if status is None:
+        return {"ok": True, "detail": "stored (could not reach OpenRouter to verify)",
+                "warn": warn or f"unverified (network: {body})"}
+    if status == 200 and isinstance(body, dict):
+        data = body.get("data", {}) if isinstance(body.get("data"), dict) else {}
+        usage, limit = data.get("usage"), data.get("limit")
+        credit = f"used ${usage:.2f}" if isinstance(usage, (int, float)) else "usage n/a"
+        if isinstance(limit, (int, float)):
+            credit += f" of ${limit:.2f} limit"
+        return {"ok": True, "detail": f"authenticated ({credit})", "warn": warn}
+    if status in (401, 403):
+        return {"ok": False, "detail": "invalid API key", "warn": None}
+    return {"ok": False, "detail": f"unexpected response (HTTP {status})", "warn": None}
+
+
 VALIDATORS = {
     "dataforseo": validate_dataforseo,
     "google-api": validate_google_api,
@@ -221,6 +247,7 @@ VALIDATORS = {
     "gbp": validate_gbp,
     "firecrawl": validate_firecrawl,
     "exa": validate_exa,
+    "openrouter": validate_openrouter,
     "slack": validate_slack,
 }
 

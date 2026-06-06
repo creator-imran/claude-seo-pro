@@ -82,6 +82,11 @@ def lint(path):
     if not re.search(r'class="footer"', html):
         warns.append("no footer block (client · version · date · score)")
 
+    # 5b) model-backend provenance line (mandatory per contract §2; warn-level)
+    if not re.search(r"Model backend", html, re.I):
+        warns.append("no 'Model backend:' provenance line in Data Integrity "
+                     "(state Anthropic first-party or the OpenRouter model map)")
+
     # 6) summary-only compression heuristic: a contract report has substantial body
     if len(html) < 18_000:
         warns.append(f"report HTML is only {len(html)//1000}KB — likely summary-only "

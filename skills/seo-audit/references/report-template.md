@@ -32,6 +32,11 @@ report exists.
 ### 2. Data Integrity & Methodology (full page)
 - How the evidence was gathered: pages captured (count, all-200 confirmation),
   sitemaps/robots, CrUX field data, which live APIs (with call count + total cost).
+- **Model backend line (mandatory):** state which backend produced this audit —
+  `Model backend: Anthropic first-party` or
+  `Model backend: OpenRouter — opus→…, sonnet→…, haiku→…`
+  (read it from `python tools/switch_provider.py status`). Transparency about what
+  generated the analysis is part of the evidence discipline; the linter warns if absent.
 - **Pending-data policy stated up front** + a warn-callout per pending section
   (exact error code, e.g. `40204 backlinks subscription required`, and the unlock).
 - Method notes: locations/language codes used, API quirks encountered (disclosed,

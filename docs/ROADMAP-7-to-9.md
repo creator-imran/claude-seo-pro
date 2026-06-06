@@ -64,6 +64,7 @@ each with its own design + checkpoint before build.
 
 | Item | Why it's a 9/10 lever | Risk notes |
 |---|---|---|
+| **Provider switching: Claude ↔ OpenRouter** (target v1.2.0) | Out-of-credits continuity + any frontier model per tier; onboarding-integrated (deferrable), one-command switch | **SPEC APPROVED** — `docs/SPEC-provider-switching.md`. Platform-native mechanism (env vars + OpenRouter's Anthropic-compatible endpoint); owned/additive files; quality guarded by claude-profile default + recommended frontier list (Kimi K2.6 class) + report provenance line |
 | **Live keyword fan-out execution** (the multi-stage merge behind `keyword_research.py`) | Productizes what's currently done by hand each audit | Preflight is fixed + live-verified; only the merge stages remain. Owned script → low risk. *(Surfaced during Phase-1 item 5.)* |
 | **AI-visibility tracking** (ChatGPT/Perplexity/AIO citation monitoring) | The category's defining 2026 capability; now table-stakes for agency tools | New live-API integration; substrate exists (DataForSEO AI-mentions + seranking/profound extensions). Owned skill → low structural risk |
 | **Scheduled monitoring + alerting** ("watch client weekly, alert on drops") | The #1 agency must-have; turns one-shot audits into retainers | Uses Claude Code cron/`/loop` + the Slack connector + drift snapshots. Owned |

@@ -1,6 +1,6 @@
 {
   "name": "claude-seo-pro",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Client-ready SEO command center for Claude Code. A hardened distribution of the open-source claude-seo system (25 sub-skills, 18 specialist agents) plus a guided onboarding wizard that securely collects and wires up the DataForSEO, Google (PSI/CrUX/GSC/GA4), Firecrawl, and Exa APIs. Adds an Evidence Integrity Protocol to the audit pipeline so findings are traceable to evidence and never fabricated, and fixes the shared-script path bug that could leave audit subagents unable to fetch. Built so one SEO manager can run enterprise-grade, evidence-verified audits from a single CLI.",
   "author": {
     "name": "Imran Shaikh",

@@ -87,6 +87,7 @@ details[open]{background:#fcfcff}
   <a href="#ob-firecrawl" class="l2">Firecrawl</a>
   <a href="#ob-exa" class="l2">Exa</a>
   <a href="#ob-slack" class="l2">Slack</a>
+  <a href="#ob-openrouter" class="l2">OpenRouter (backend fallback)</a>
   <a href="#firstaudit">7 · Your first full audit</a>
   <a href="#report">8 · Reading & delivering the report</a>
   <a href="#report-sections" class="l2">All 14 sections explained</a>
@@ -97,6 +98,7 @@ details[open]{background:#fcfcff}
   <a href="#upcmds">10 · Upstream command reference (27)</a>
   <a href="#knowledge">11 · Client knowledge & learning</a>
   <a href="#routing">12 · Model routing & cost</a>
+  <a href="#switching" class="l2">Claude ↔ OpenRouter switching</a>
   <a href="#slack">13 · Slack connector deployment</a>
   <a href="#drift">14 · Drift monitoring</a>
   <a href="#current">15 · Staying current (sync · CI · versions)</a>
@@ -115,7 +117,7 @@ details[open]{background:#fcfcff}
   <h1>Claude SEO Pro</h1>
   <div class="sub">The complete, hands-on guide to operating the evidence-verified SEO command center — from a blank machine to delivering white-labeled, client-grade audit reports. Written for an SEO manager with <b>no coding background</b>.</div>
   <p style="margin-top:30px;color:var(--muted)">
-    <b>Manual version:</b> v02 · <b>Product version:</b> 1.1.0 · <b>Date:</b> June 2026<br>
+    <b>Manual version:</b> v02 · <b>Product version:</b> 1.2.0 · <b>Date:</b> June 2026<br>
     <b>Supersedes:</b> Manual v01 (every section rewritten and expanded)<br>
     <b>Interactive HTML:</b> use the sidebar to navigate and the filter box to search sections. Collapsible boxes (▸) hide deep-dives until you need them.
   </p>
@@ -144,6 +146,7 @@ details[open]{background:#fcfcff}
 <tr><td><span class="tag t-new">New</span> Plugin-marketplace one-command install</td><td><a href="#install-paths">§5.1</a></td></tr>
 <tr><td><span class="tag t-new">New</span> Roadmap + refused-features guardrail</td><td><a href="#current">§15</a></td></tr>
 <tr><td>Fixed: keyword-research preflight bug; timezone deprecations; stale-install incident</td><td><a href="#trouble">§17</a></td></tr>
+<tr><td><span class="tag t-new">New 1.2.0</span> Claude ↔ OpenRouter backend switching (out-of-credits continuity + custom frontier models)</td><td><a href="#switching">§12.5</a> · <a href="#ob-openrouter">§6.8</a></td></tr>
 </table>
 
 <!-- 2 USING -->
@@ -316,6 +319,11 @@ python ~/.claude/skills/seo/onboarding/setup_wizard.py  ← directly in your ter
 <h3 id="ob-slack">6.7 Slack — the chat connector</h3>
 <p><b>Unlocks:</b> running audits from Slack (<code>/seo audit client.com</code> in a channel). Needs a Slack app's <b>signing secret + bot token</b>; the validator calls <code>auth.test</code>. Full deployment walkthrough in <a href="#slack">§13</a> — configure the provider here first, deploy the bridge there.</p>
 
+<h3 id="ob-openrouter">6.8 OpenRouter — the backend fallback <span class="tag t-new">New 1.2.0</span></h3>
+<p><b>Unlocks:</b> a second model backend. When Claude credits run out, switch the whole system to OpenRouter in ~60 seconds and keep working — or run other frontier models by choice. <b>Fully optional and deferrable</b>: the wizard offers <b>[N]ow / [L]ater / [S]kip</b>; nothing else depends on it.</p>
+<div class="step"><div class="n">1</div><div>Create a key at <code>openrouter.ai/keys</code> (starts with <code>sk-or-</code>) and add some credit.</div></div>
+<div class="step"><div class="n">2</div><div>Run the wizard (<code>/seo-setup</code>, or directly: <code>python ~/.claude/skills/seo/onboarding/setup_wizard.py --provider openrouter</code>). Validation uses OpenRouter's free key-info endpoint and <b>shows your remaining credit</b>.</div></div>
+<div class="step"><div class="n">3</div><div>That's it — the key is stored owner-only. Actually <i>switching</i> backends is a separate, deliberate step: see <a href="#switching">§12.5</a>.</div></div>
 <div class="callout good"><span class="lbl">Minimum viable setup</span><br>Just <b>DataForSEO + Google API key</b> gives you the full 4-phase audit with live rankings, keyword research and real CWV. Everything else adds depth and can be attached later without re-doing anything.</div>
 
 <!-- 7 FIRST AUDIT -->
@@ -494,6 +502,26 @@ python ~/.claude/skills/seo/routing/model_router.py set --force-model opus    # 
 python ~/.claude/skills/seo/routing/model_router.py reset</pre>
 <div class="callout"><span class="lbl">Why cheap models are safe here</span><br>Extraction agents read <b>pre-fetched files</b> — there's nothing to hallucinate about; they're transcribing. Judgment work is routed up-tier. One observed limit: very large minified pages (300KB+) can exhaust a small model's turn budget — if a specialist stalls, that's the first suspect (§17).</div>
 
+<h3 id="switching">12.5 Switching backends: Claude credits ↔ OpenRouter <span class="tag t-new">New 1.2.0</span></h3>
+<p>The system always runs on Claude Code; what switches is the <b>backend</b> the CLI talks to. One tool manages it — installed at <code>~/.claude/skills/seo/scripts/switch_provider.py</code> (same file as <code>tools/switch_provider.py</code> in a repo checkout). Conversationally: <code>/seo-provider</code>.</p>
+<h4>Recipe 1 — "I ran out of Claude credits" (~60 seconds)</h4>
+<pre>python ~/.claude/skills/seo/scripts/switch_provider.py use openrouter</pre>
+<div class="step"><div class="n">1</div><div>In Claude Code: <code>/logout</code> (clears cached Anthropic auth — skipping this causes auth conflicts).</div></div>
+<div class="step"><div class="n">2</div><div><b>Exit Claude Code completely</b>, then start it again: <code>claude</code>. The endpoint is read <b>once at startup</b> — without the restart, nothing changes.</div></div>
+<div class="step"><div class="n">3</div><div>Keep working. The default profile maps every tier to the <b>same Claude models, billed via OpenRouter</b> — near-zero quality risk, slight cost premium vs first-party (this is continuity, not savings).</div></div>
+<h4>Recipe 2 — switching back to Claude credits</h4>
+<pre>python ~/.claude/skills/seo/scripts/switch_provider.py use anthropic</pre>
+<p>Then: restart Claude Code → <code>/login</code>. Done.</p>
+<h4>Recipe 3 — custom models (frontier-grade only)</h4>
+<pre>python ~/.claude/skills/seo/scripts/switch_provider.py set-models --opus moonshotai/kimi-k2.6 --sonnet moonshotai/kimi-k2.6 --haiku &lt;fast-model-slug&gt;
+python ~/.claude/skills/seo/scripts/switch_provider.py use openrouter --profile custom</pre>
+<p>Pick slugs from <code>openrouter.ai/models</code> — every slug is <b>validated live</b> before anything is written (typos get close-match suggestions). Then the same /logout → restart steps.</p>
+<div class="callout warn"><span class="lbl">The quality contract — read once</span><br>Claude Code and this product's Evidence Integrity Protocol are <b>optimized for Anthropic models</b>; on other models, adherence to the evidence discipline is not guaranteed. Use <b>frontier-grade models only</b> (Kimi K2.6 class). Backstops that hold regardless: the report linter still enforces structure, and every report's Data Integrity section <b>discloses which backend produced it</b>.</div>
+<h4>Operations</h4>
+<pre>python ~/.claude/skills/seo/scripts/switch_provider.py status    # backend, model map, key health, remaining credit
+python ~/.claude/skills/seo/scripts/switch_provider.py restore   # undo: restore settings.json from latest backup</pre>
+<p>Safety, built in: the key AND the model map are validated live <b>before</b> writing (a dead key can't brick your next session); <code>~/.claude/settings.json</code> is backed up on every write (last 5 kept); exactly 7 env keys are managed and nothing else is touched; a foreign gateway URL is never overwritten without <code>--force</code>.</p>
+
 <!-- 13 SLACK -->
 <h2 id="slack" class="pgbreak">13 · Slack connector — audits from chat</h2>
 <p>For the manager who doesn't live in a terminal: type <code>/seo audit client.com</code> in Slack; the bridge verifies, authorizes, acknowledges in under 3 seconds, runs a headless audit, and posts the result back.</p>
@@ -573,6 +601,10 @@ python tools/sync_upstream.py --tag vX.Y.Z   # vendor a new upstream release</pr
 <tr><td>OAuth browser window never opens (headless/server)</td><td>OAuth needs a human browser consent</td><td>Run onboarding once on a desktop machine; copy the token from <code>~/.config/claude-seo/</code> to the server seat</td></tr>
 <tr><td>PowerShell: piping output into <code>python -c</code> gives JSON errors</td><td>Known PS quirk — stdin arrives empty</td><td>Write to a file and read it, or use Select-String on the output instead of piping into Python</td></tr>
 <tr><td><code>git push</code> rejected / "not a repository"</td><td>Folder not initialized or remote missing</td><td>See <code>docs/PUBLISH.md</code>; the publish script handles init + remote + secret-guard in one step</td></tr>
+<tr><td>Switched to OpenRouter but nothing changed / still billing Claude</td><td>The endpoint env is read <b>once at Claude Code startup</b> — the session wasn't restarted</td><td>Exit Claude Code completely and start it again (Recipe 1, §12.5). <code>status</code> shows what settings.json actually says</td></tr>
+<tr><td>Auth errors right after switching backends</td><td>Cached Anthropic login conflicting with the OpenRouter token (or vice versa)</td><td><code>/logout</code> before switching to OpenRouter; <code>/login</code> after switching back to Anthropic</td></tr>
+<tr><td>Switcher refuses: "unknown model slug"</td><td>Typo or model no longer listed on OpenRouter</td><td>Use the close-match suggestions it prints, or pick from <code>openrouter.ai/models</code>; slugs are validated live by design</td></tr>
+<tr><td>Session broken after a backend switch</td><td>Rare — e.g. settings edited by hand alongside the switcher</td><td><code>python ~/.claude/skills/seo/scripts/switch_provider.py restore</code> (latest backup), restart Claude Code</td></tr>
 </table>
 <div class="callout"><span class="lbl">When something else breaks</span><br>Ask Claude in-session — it has the full system context. Include the exact error text. For reproducible bugs, the CI suite (<code>python tests/test_owned_components.py</code>) tells you in seconds whether the core is healthy on your machine.</div>
 

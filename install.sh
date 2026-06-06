@@ -56,7 +56,8 @@ main() {
     if [ -d "$REPO_ROOT/$d" ]; then
       mkdir -p "$SKILL_DIR/$d"; cp -R "$REPO_ROOT/$d/"* "$SKILL_DIR/$d/"
     fi
-  done
+  done  # operator tools that must work on installed seats without a repo checkout
+  [ -f "$REPO_ROOT/tools/switch_provider.py" ] && cp -f "$REPO_ROOT/tools/switch_provider.py" "$SKILL_DIR/scripts/switch_provider.py"
 
   echo "=> Installing onboarding wizard..."
   mkdir -p "$SKILL_DIR/onboarding"

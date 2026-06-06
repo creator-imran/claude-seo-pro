@@ -1,6 +1,6 @@
 # Claude SEO Pro — System Version & Provenance
 
-**Product:** Claude SEO Pro · **Version:** `1.1.0` · **Date:** 2026-06-06
+**Product:** Claude SEO Pro · **Version:** `1.2.0` · **Date:** 2026-06-06
 **Maintainer:** [creator-imran](https://github.com/creator-imran)
 **Built on (upstream):** [`AgricIDaniel/claude-seo`](https://github.com/AgricIDaniel/claude-seo) `@ v2.0.0` · MIT
 
@@ -163,6 +163,25 @@ All additions are **owned files** (protected from upstream sync via
   (aborted every live run as "data pending"); replaced with a real minimal Labs probe,
   live-verified. The fan-out *execution* remains Phase-2 work (honest stub).
 
+### 3.10 Provider switching: Claude ↔ OpenRouter — NEW in 1.2.0
+- **`tools/switch_provider.py`** (also installed to `~/.claude/skills/seo/scripts/`) +
+  **`skills/seo-provider/SKILL.md`** (`/seo-provider`): switch the model backend
+  between Anthropic first-party and OpenRouter on demand — the out-of-credits
+  lifeline. Two profiles: `claude` (default; same Claude models via OpenRouter's
+  Anthropic-compatible endpoint) and `custom` (any frontier model per tier, e.g.
+  Kimi K2.6 class; slugs validated live before writing).
+- **Onboarding:** new deferrable `openrouter` provider ([N]ow/[L]ater/[S]kip) with
+  live key validation via OpenRouter's free key-info endpoint (shows remaining credit).
+- **Safety:** key + model map validated live BEFORE writing; `settings.json`
+  timestamped backups (keep 5) + `restore`; exactly 7 managed env keys; foreign
+  gateway requires `--force`; state tracked in `provider-state.json`.
+- **Router:** emits tier aliases under OpenRouter (env vars resolve them); cost
+  estimates carry a backend disclaimer. **Reports** disclose the model backend in
+  Data Integrity (linter warns if absent).
+- Spec: `docs/SPEC-provider-switching.md`. Status: ✅ 25 new CI assertions (93 total);
+  switcher CLI paths smoke-tested; live end-to-end switch is an operator step
+  (requires a funded OpenRouter key).
+
 ---
 
 ## 4. Verification status
@@ -184,6 +203,7 @@ All additions are **owned files** (protected from upstream sync via
 
 | Version | Date | Summary |
 |---|---|---|
+| `1.2.0` | 2026-06-06 | **Provider switching (Claude ↔ OpenRouter).** New deferrable `openrouter` onboarding provider (live key validation, shows remaining credit); `switch_provider.py` + `/seo-provider` skill — one-command backend switch with `claude` profile (same models via OpenRouter; out-of-credits continuity) and `custom` profile (frontier models per tier, live slug validation, Kimi-K2.6-class guidance); settings.json backups + restore; router alias mode; report model-backend provenance line (+ linter warn); installers ship the switcher to installed seats; docs across README / Manual §6.8+§12.5+troubleshooting / ONBOARDING / SPEC. 25 new CI assertions (93 total). |
 | `1.1.0` | 2026-06-06 | **Hardening + quality release (Phase 1 + risk-free Phase 2).** Added: CI regression gate (`tests/` + `ci.yml`); install drift guard (`tools/check_install.py` + installer manifest stamp, wired into `/seo-setup verify`); white-label branding (`onboarding/branding.py` + report-template tokens); deterministic report-contract linter (`tools/lint_report.py`, mandatory pre-delivery, CI self-tested); plugin-marketplace distribution (rebranded `.claude-plugin/marketplace.json`, README one-command install); roadmap + refused-features guardrail (`docs/ROADMAP-7-to-9.md`); report depth contract (14 sections, extracted from the gold-standard client report) with HTML skeleton. Fixed: `keyword_research.py` dead-endpoint preflight (live-verified); `utcnow()` deprecations; stale-install incident (drift guard caught it). User Manual **v02** (exhaustive rewrite; supersedes v01). |
 | `1.0.0` | 2026-06-06 | Initial Pro distribution (tag `v1.0.0`): vendored `claude-seo v2.0.0` + Evidence Integrity overlay + guided onboarding (7 providers) + 4-phase audit (BI, keyword research, local/GBP) + knowledge store/cache + learning agent + model routing + Slack connector + upstream-sync + User Manual v01. Verified by 68/68 adversarial assertions and two live client audits. Feature 5 (skills-enhancer) deferred by design. |
 

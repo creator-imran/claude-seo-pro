@@ -65,6 +65,10 @@ foreach ($d in @("scripts","hooks","schema","pdf")) {
         Copy-Item -Recurse -Force "$RepoRoot\$d\*" "$SkillDir\$d"
     }
 }
+# operator tools that must work on installed seats without a repo checkout
+if (Test-Path "$RepoRoot\tools\switch_provider.py") {
+    Copy-Item -Force "$RepoRoot\tools\switch_provider.py" "$SkillDir\scripts\switch_provider.py"
+}
 
 # --- Onboarding wizard (the new feature) ---
 Write-Host "=> Installing onboarding wizard..." -ForegroundColor Yellow
